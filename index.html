@@ -3,892 +3,241 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#090b10">
+  <meta name="theme-color" content="#10101c">
 
-  <meta name="description"
-    content="Editors Caption AI — professional caption templates, typography and video captions.">
-
-  <title>Editors Caption AI — Typography Studio</title>
+  <title>Editors Caption AI</title>
 
   <link rel="stylesheet" href="style.css">
-
+  <script src="script.js" defer></script>
 </head>
 
 <body>
-
-<header class="topbar">
-
-  <a class="brand" href="#" aria-label="Editors Caption AI home">
-
-    <span class="brand-mark">E</span>
-
-    <span>
-      EDITORS <b>CAPTION AI</b>
-      <small>TYPOGRAPHY STUDIO</small>
-    </span>
-
-  </a>
-
-  <div class="top-actions">
-    <span class="status-dot"></span>
-    <span class="top-label">CREATOR WORKSPACE</span>
-
-    <button
-      id="themeToggle"
-      class="icon-button"
-      title="Toggle light mode"
-      aria-label="Toggle theme">◐</button>
-  </div>
-
-</header>
-
-
-<div class="app-shell">
-
-  <!-- SIDEBAR -->
-
-  <aside class="sidebar">
-
-    <div class="sidebar-label">WORKSPACE</div>
-
-    <button class="nav-item active" data-tab="captions">
-      <span>✦</span> Caption Generator
-    </button>
-
-    <button class="nav-item" data-tab="templates">
-      <span>▦</span> Template Library
-      <i>12</i>
-    </button>
-
-    <button class="nav-item" data-tab="fonts">
-      <span>Aa</span> Font Studio
-    </button>
-
-    <button class="nav-item" data-tab="video">
-      <span>▶</span> Video Captioner
-    </button>
-
-    <button class="nav-item" data-tab="saved">
-      <span>♡</span> Saved Captions
-    </button>
-
-
-    <div class="sidebar-card">
-
-      <div class="sidebar-card-icon">✧</div>
-
-      <b>Make every word move.</b>
-
-      <p>
-        Build a consistent style for your next edit.
-      </p>
-
-      <button data-tab="templates" class="text-link">
-        Explore templates →
-      </button>
-
+  <header class="header">
+    <div>
+      <h1>Editors Caption AI</h1>
+      <p>Captions, styles and video editing tools</p>
     </div>
 
+    <button id="themeToggle" type="button">Toggle theme</button>
+  </header>
 
-    <div class="sidebar-footer">
-      EDITORS CAPTION AI
-      <span>v2.0</span>
-    </div>
+  <nav class="navigation">
+    <button class="nav-item active" data-tab="captions">Captions</button>
+    <button class="nav-item" data-tab="templates">Templates</button>
+    <button class="nav-item" data-tab="fonts">Fonts</button>
+    <button class="nav-item" data-tab="video">Video Editor</button>
+    <button class="nav-item" data-tab="saved">Saved</button>
+  </nav>
 
-  </aside>
-
-
-  <!-- MAIN CONTENT -->
-
-  <main class="main-content">
-
-    <section class="page-heading">
-
-      <div>
-
-        <div class="eyebrow">
-          YOUR CREATIVE WORKSPACE
-        </div>
-
-        <h1>
-          Typography that
-          <span class="gradient-text">hits different.</span>
-        </h1>
-
-        <p>
-          Create captions, explore styles, and preview text over your video.
-        </p>
-
-      </div>
-
-      <div class="heading-badge">
-        <span>●</span> READY TO CREATE
-      </div>
-
-    </section>
-
-
-    <!-- CAPTION GENERATOR -->
-
+  <main>
     <section id="captions" class="page active">
-
-      <div class="section-title">
-
-        <div>
-          <h2>Caption generator</h2>
-
-          <p>
-            Find the right words for the mood of your edit.
-          </p>
-        </div>
-
-        <span class="section-number">01 / CREATE</span>
-
-      </div>
-
-
-      <div class="panel">
-
-        <div class="form-grid">
-
-          <label class="field">
-
-            <span>Caption category</span>
-
-            <select id="category">
-
-              <option value="attitude">Attitude & Swag</option>
-              <option value="love">Love & Romance</option>
-              <option value="sad">Sad & Emotional</option>
-              <option value="friendship">Friendship</option>
-              <option value="mass">Mass & Cinematic</option>
-              <option value="gaming">Gaming</option>
-              <option value="motivation">Motivation</option>
-              <option value="funny">Funny & Meme</option>
-              <option value="life">Life & Thoughts</option>
-              <option value="travel">Travel & Nature</option>
-              <option value="gym">Gym & Fitness</option>
-              <option value="edit">Editor / Reels</option>
-
-            </select>
-
-          </label>
-
-
-          <label class="field">
-
-            <span>Language</span>
-
-            <select id="language">
-
-              <option value="thunglish">
-                Thunglish (Tamil + English)
-              </option>
-
-              <option value="tamil">Tamil</option>
-
-              <option value="english">English</option>
-
-              <option value="mixed">
-                Mixed / Short punchlines
-              </option>
-
-            </select>
-
-          </label>
-
-        </div>
-
-
-        <label class="field">
-
-          <span>
-            Keywords or custom mood
-            <small>optional</small>
-          </span>
-
-          <input
-            id="keywords"
-            placeholder="e.g. night drive, friendship, comeback, rain...">
-
-        </label>
-
-
-        <div class="button-row">
-
-          <button id="generateBtn" class="btn btn-primary">
-            ✦ Generate captions
-          </button>
-
-          <button id="randomBtn" class="btn btn-secondary">
-            ↻ Surprise me
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="results-heading">
-
-        <h3>Caption ideas</h3>
-
-        <span id="resultCount" class="muted">
-          Ready when you are
-        </span>
-
-      </div>
-
-
-      <div id="captionResults" class="caption-grid"></div>
-
-    </section>
-
-
-
-    <!-- TEMPLATE LIBRARY -->
-
-    <section id="templates" class="page">
-
-      <div class="section-title">
-
-        <div>
-          <h2>Professional template library</h2>
-
-          <p>
-            Choose a design to apply its styling to the video editor.
-          </p>
-        </div>
-
-        <span class="section-number">02 / STYLE</span>
-
-      </div>
-
-
-      <div class="toolbar">
-
-        <label class="search-box">
-          ⌕
-          <input
-            id="templateSearch"
-            placeholder="Search templates...">
-        </label>
-
-
-        <select id="templateCategory" class="compact-select">
-
-          <option value="all">All styles</option>
-          <option value="kinetic">Kinetic</option>
-          <option value="neon">Neon & Glow</option>
-          <option value="cinematic">Cinematic</option>
-          <option value="minimal">Minimal</option>
-          <option value="social">Social / Reels</option>
-          <option value="romantic">Romantic</option>
-
-        </select>
-
-      </div>
-
-
-      <div id="templateResults" class="template-grid"></div>
-
-    </section>
-
-
-
-    <!-- FONT STUDIO -->
-
-    <section id="fonts" class="page">
-
-      <div class="section-title">
-
-        <div>
-          <h2>Font studio</h2>
-
-          <p>
-            Explore font families, weight, spacing and colour.
-          </p>
-        </div>
-
-        <span class="section-number">03 / TYPE</span>
-
-      </div>
-
-
-      <div class="panel">
-
-        <label class="field">
-
-          <span>Preview text</span>
-
-          <textarea id="fontInput" rows="2">PURE KINETIC ENERGY</textarea>
-
-        </label>
-
-
-        <div class="form-grid">
-
-          <label class="field">
-
-            <span>Font family</span>
-
-            <select id="fontFamily"></select>
-
-          </label>
-
-
-          <label class="field">
-
-            <span>Font weight</span>
-
-            <select id="fontWeight">
-
-              <option value="400">Regular</option>
-              <option value="600">Semi-bold</option>
-              <option value="700">Bold</option>
-              <option value="800" selected>Extra-bold</option>
-              <option value="900">Black</option>
-
-            </select>
-
-          </label>
-
-
-          <label class="field">
-
-            <span>Text colour</span>
-
-            <input id="fontColor" type="color" value="#ffffff">
-
-          </label>
-
-
-          <label class="field">
-
-            <span>Background colour</span>
-
-            <input id="fontBg" type="color" value="#10131b">
-
-          </label>
-
-
-          <label class="field">
-
-            <span>
-              Font size
-              <b id="fontSizeLabel">42px</b>
-            </span>
-
-            <input
-              id="fontSize"
-              type="range"
-              min="12"
-              max="96"
-              value="42">
-
-          </label>
-
-
-          <label class="field">
-
-            <span>
-              Letter spacing
-              <b id="spacingLabel">0px</b>
-            </span>
-
-            <input
-              id="letterSpacing"
-              type="range"
-              min="-2"
-              max="12"
-              value="0">
-
-          </label>
-
-        </div>
-
-
-        <div id="fontPreview" class="font-preview">
-          PURE KINETIC ENERGY
-        </div>
-
-
-        <div class="button-row">
-
-          <button id="copyFont" class="btn btn-secondary">
-            Copy text
-          </button>
-
-          <button id="useFont" class="btn btn-primary">
-            Use in video editor →
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="panel">
-
-        <h3>Font collections</h3>
-
-        <p class="muted">
-          Font choices include bold display, condensed, geometric sans,
-          serif, script and monospace families. Web fonts load from
-          Google Fonts when you have an internet connection; the device
-          uses a fallback if they do not load.
-        </p>
-
-        <div id="fontChips" class="font-chips"></div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- VIDEO CAPTION EDITOR -->
-
-    <section id="video" class="page">
-
-      <div class="section-title">
-
-        <div>
-          <h2>Video caption editor</h2>
-
-          <p>
-            Upload a clip, style captions, and preview their timing.
-          </p>
-        </div>
-
-        <span class="section-number">04 / EDIT</span>
-
-      </div>
-
-
-      <div class="panel">
-
-        <label class="field">
-
-          <span>Upload video</span>
-
-          <input
-            id="videoFile"
-            type="file"
-            accept="video/*">
-
-        </label>
-
-
-        <div class="editor-layout">
-
-
-          <!-- VIDEO PREVIEW -->
-
-          <div class="preview-column">
-
-            <div class="video-stage" id="videoStage">
-
-              <video
-                id="videoPlayer"
-                controls
-                playsinline>
-              </video>
-
-              <div
-                id="videoCaption"
-                class="video-caption">
-              </div>
-
-              <div
-                id="emptyVideo"
-                class="video-placeholder">
-
-                <div class="play-symbol">▶</div>
-
-                <b>Your video preview</b>
-
-                <span>Upload a clip to start styling</span>
-
-              </div>
-
-            </div>
-
-
-            <div class="preview-foot">
-
-              <span>LIVE PREVIEW</span>
-
-              <span id="videoTime">00:00 / 00:00</span>
-
-            </div>
-
-          </div>
-
-
-
-          <!-- VIDEO CONTROLS -->
-
-          <div class="editor-controls">
-
-            <div class="control-heading">
-
-              <span>CAPTION DESIGN</span>
-
-              <span class="live-chip">LIVE</span>
-
-            </div>
-
-
-            <label class="field">
-
-              <span>Template</span>
-
-              <select id="videoTemplate"></select>
-
-            </label>
-
-
-            <label class="field">
-
-              <span>Caption text</span>
-
-              <textarea
-                id="manualText"
-                rows="3"
-                placeholder="Type your caption here...">
-              </textarea>
-
-            </label>
-
-
-            <div class="form-grid">
-
-
-              <label class="field">
-
-                <span>Font family</span>
-
-                <select id="captionFont"></select>
-
-              </label>
-
-
-              <label class="field">
-
-                <span>Animation</span>
-
-                <select id="captionAnimation">
-
-                  <option value="none">None</option>
-                  <option value="pop">Pop</option>
-                  <option value="bounce">Bounce</option>
-                  <option value="slide">Slide in</option>
-                  <option value="zoom">Zoom</option>
-                  <option value="fade">Fade</option>
-                  <option value="type">Typewriter preview</option>
-
-                </select>
-
-              </label>
-
-
-              <label class="field">
-
-                <span>Text colour</span>
-
-                <input
-                  id="captionColor"
-                  type="color"
-                  value="#ffffff">
-
-              </label>
-
-
-              <label class="field">
-
-                <span>Highlight colour</span>
-
-                <input
-                  id="highlightColor"
-                  type="color"
-                  value="#b7ff00">
-
-              </label>
-
-
-              <label class="field">
-
-                <span>Outline colour</span>
-
-                <input
-                  id="outlineColor"
-                  type="color"
-                  value="#000000">
-
-              </label>
-
-
-              <label class="field">
-
-                <span>Shadow</span>
-
-                <select id="captionShadow">
-
-                  <option value="yes">On</option>
-                  <option value="no">Off</option>
-
-                </select>
-
-              </label>
-
-
-              <label class="field">
-
-                <span>
-                  Font size
-                  <b id="captionSizeLabel">44px</b>
-                </span>
-
-                <input
-                  id="captionSize"
-                  type="range"
-                  min="12"
-                  max="100"
-                  value="44">
-
-              </label>
-
-
-              <label class="field">
-
-                <span>
-                  Outline width
-                  <b id="outlineLabel">3px</b>
-                </span>
-
-                <input
-                  id="outlineWidth"
-                  type="range"
-                  min="0"
-                  max="12"
-                  value="3">
-
-              </label>
-
-
-              <label class="field">
-
-                <span>Position</span>
-
-                <select id="captionPosition">
-
-                  <option value="bottom">Bottom</option>
-                  <option value="middle">Middle</option>
-                  <option value="top">Top</option>
-
-                </select>
-
-              </label>
-
-
-              <label class="field">
-
-                <span>Layout</span>
-
-                <select id="captionLayout">
-
-                  <option value="single">Single line</option>
-                  <option value="stack">Kinetic stack</option>
-                  <option value="trio">Trio lockup</option>
-                  <option value="karaoke">Karaoke highlight</option>
-
-                </select>
-
-              </label>
-
-
-              <label class="field">
-
-                <span>Start (seconds)</span>
-
-                <input
-                  id="captionStart"
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  value="0">
-
-              </label>
-
-
-              <label class="field">
-
-                <span>End (seconds)</span>
-
-                <input
-                  id="captionEnd"
-                  type="number"
-                  min="0.1"
-                  step="0.1"
-                  value="3">
-
-              </label>
-
-            </div>
-
-
-            <div class="button-row">
-
-              <button
-                id="addVideoCaption"
-                class="btn btn-primary">
-                ＋ Add to timeline
-              </button>
-
-              <button
-                id="clearVideoCaptions"
-                class="btn btn-secondary">
-                Clear all
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-
-      <!-- CAPTION TIMELINE -->
-
-      <div class="panel">
-
-        <div class="section-title compact">
-
-          <div>
-
-            <h3>Caption timeline</h3>
-
-            <p>
-              Tap edit to change a segment. Captions are stored
-              in this browser session.
-            </p>
-
-          </div>
-
-          <span
-            id="timelineCount"
-            class="section-number">
-            0 SEGMENTS
-          </span>
-
-        </div>
-
-
-        <div id="videoCaptionList" class="timeline-list"></div>
-
-      </div>
-
-
-
-      <!-- SUBTITLE EXPORT -->
-
-      <div class="panel">
-
-        <h3>Speech-to-text options</h3>
-
-        <p class="muted">
-          This static website supports manual captions and subtitle
-          exports. Automatically transcribing uploaded video audio
-          requires a speech-recognition model or API.
-        </p>
-
-
-        <div class="button-row">
-
-          <button
-            id="downloadSrt"
-            class="btn btn-secondary">
-            ↓ Download SRT subtitles
-          </button>
-
-          <button
-            id="exportVideo"
-            class="btn btn-primary">
-            Export captioned WebM
-          </button>
-
-        </div>
-
-
-        <div
-          id="videoStatus"
-          class="status-message"
-          aria-live="polite">
-          Ready. Upload a video to begin.
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- SAVED CAPTIONS -->
-
-    <section id="saved" class="page">
-
-      <div class="section-title">
-
-        <div>
-          <h2>Saved captions</h2>
-
-          <p>
-            Your saved caption ideas, stored locally in this browser.
-          </p>
-        </div>
-
-        <span class="section-number">05 / LIBRARY</span>
-
-      </div>
-
+      <h2>Caption Generator</h2>
+
+      <label for="category">Category</label>
+      <select id="category">
+        <option value="attitude">Attitude</option>
+        <option value="love">Love</option>
+        <option value="sad">Sad</option>
+        <option value="friendship">Friendship</option>
+        <option value="mass">Mass</option>
+        <option value="gaming">Gaming</option>
+        <option value="motivation">Motivation</option>
+        <option value="funny">Funny</option>
+        <option value="life">Life</option>
+        <option value="travel">Travel</option>
+        <option value="gym">Gym</option>
+        <option value="edit">Editing</option>
+      </select>
+
+      <label for="language">Language</label>
+      <select id="language">
+        <option value="thunglish">Thunglish</option>
+        <option value="tamil">Tamil</option>
+        <option value="english">English</option>
+        <option value="mixed">Mixed</option>
+      </select>
+
+      <label for="keywords">Keywords (optional)</label>
+      <input id="keywords" placeholder="Enter your caption idea">
 
       <div class="button-row">
-
-        <button
-          id="clearSaved"
-          class="btn btn-secondary">
-          Clear saved captions
-        </button>
-
+        <button id="generateBtn" type="button">Generate captions</button>
+        <button id="randomBtn" type="button">Random captions</button>
       </div>
 
-
-      <div id="savedResults" class="caption-grid"></div>
-
+      <p id="resultCount" class="status"></p>
+      <div id="captionResults" class="card-grid"></div>
     </section>
 
+    <section id="templates" class="page">
+      <h2>Caption Templates</h2>
 
+      <label for="templateCategory">Category</label>
+      <select id="templateCategory">
+        <option value="all">All templates</option>
+        <option value="cinematic">Cinematic</option>
+        <option value="neon">Neon</option>
+        <option value="minimal">Minimal</option>
+        <option value="social">Social media</option>
+      </select>
 
-    <!-- FOOTER -->
+      <label for="templateSearch">Search templates</label>
+      <input id="templateSearch" placeholder="Search by name">
 
-    <footer class="app-footer">
+      <div id="templateResults" class="card-grid"></div>
+    </section>
 
-      <span>EDITORS CAPTION AI</span>
+    <section id="fonts" class="page">
+      <h2>Font Studio</h2>
 
-      <span>Made for creators · Keep creating.</span>
+      <label for="fontInput">Preview text</label>
+      <textarea id="fontInput" rows="3">YOUR NEXT EDIT</textarea>
 
-    </footer>
+      <label for="fontFamily">Font family</label>
+      <select id="fontFamily">
+        <option value="Arial">Arial</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Impact">Impact</option>
+        <option value="monospace">Monospace</option>
+        <option value="serif">Serif</option>
+        <option value="sans-serif">Sans Serif</option>
+      </select>
 
+      <label for="fontWeight">Font weight</label>
+      <select id="fontWeight">
+        <option value="400">Regular</option>
+        <option value="700">Bold</option>
+        <option value="900">Extra bold</option>
+      </select>
+
+      <label for="fontColor">Text colour</label>
+      <input id="fontColor" type="color" value="#ffffff">
+
+      <label for="fontBg">Background colour</label>
+      <input id="fontBg" type="color" value="#24243b">
+
+      <label for="fontSize">Font size</label>
+      <input id="fontSize" type="range" min="16" max="72" value="36">
+      <span id="fontSizeLabel">36px</span>
+
+      <label for="letterSpacing">Letter spacing</label>
+      <input id="letterSpacing" type="range" min="0" max="12" value="1">
+      <span id="spacingLabel">1px</span>
+
+      <div id="fontPreview" class="font-preview">YOUR NEXT EDIT</div>
+      <div id="fontChips" class="button-row"></div>
+
+      <button id="copyFont" type="button">Copy preview text</button>
+      <button id="useFont" type="button">Use in video editor</button>
+    </section>
+
+    <section id="video" class="page">
+      <h2>Video Caption Editor</h2>
+
+      <label for="videoFile">Choose video</label>
+      <input id="videoFile" type="file" accept="video/*">
+
+      <p id="videoStatus" class="status">Choose a video to begin.</p>
+
+      <div class="video-stage">
+        <video id="videoPlayer" controls playsinline></video>
+        <div id="emptyVideo">Your video preview appears here</div>
+        <div id="videoCaption"></div>
+      </div>
+
+      <label for="manualText">Caption text</label>
+      <textarea id="manualText" rows="3"
+        placeholder="Type your caption here"></textarea>
+
+      <label for="captionFont">Font</label>
+      <select id="captionFont">
+        <option value="Arial">Arial</option>
+        <option value="Impact">Impact</option>
+        <option value="Georgia">Georgia</option>
+        <option value="monospace">Monospace</option>
+      </select>
+
+      <label for="captionColor">Text colour</label>
+      <input id="captionColor" type="color" value="#ffffff">
+
+      <label for="highlightColor">Highlight colour</label>
+      <input id="highlightColor" type="color" value="#ffe45e">
+
+      <label for="outlineColor">Outline colour</label>
+      <input id="outlineColor" type="color" value="#000000">
+
+      <label for="captionSize">Caption size</label>
+      <input id="captionSize" type="range" min="16" max="72" value="32">
+
+      <label for="outlineWidth">Outline width</label>
+      <input id="outlineWidth" type="range" min="0" max="8" value="3">
+
+      <label for="captionPosition">Position</label>
+      <select id="captionPosition">
+        <option value="bottom">Bottom</option>
+        <option value="middle">Middle</option>
+        <option value="top">Top</option>
+      </select>
+
+      <label for="captionLayout">Layout</label>
+      <select id="captionLayout">
+        <option value="normal">Normal</option>
+        <option value="boxed">Boxed</option>
+        <option value="highlight">Highlighted</option>
+      </select>
+
+      <label for="captionAnimation">Animation</label>
+      <select id="captionAnimation">
+        <option value="none">None</option>
+        <option value="pop">Pop</option>
+        <option value="fade">Fade</option>
+      </select>
+
+      <label for="captionShadow">Text shadow</label>
+      <select id="captionShadow">
+        <option value="on">On</option>
+        <option value="off">Off</option>
+      </select>
+
+      <label for="captionStart">Start time (seconds)</label>
+      <input id="captionStart" type="number" min="0" value="0">
+
+      <label for="captionEnd">End time (seconds)</label>
+      <input id="captionEnd" type="number" min="0" value="5">
+
+      <button id="addVideoCaption" type="button">Add caption</button>
+
+      <h3>Caption timeline</h3>
+      <p id="timelineCount">0 captions</p>
+      <div id="videoCaptionList"></div>
+
+      <button id="clearVideoCaptions" type="button">Clear captions</button>
+      <button id="downloadSrt" type="button">Download SRT</button>
+
+      <label for="videoTemplate">Video template</label>
+      <select id="videoTemplate">
+        <option value="normal">Normal</option>
+        <option value="cinematic">Cinematic</option>
+        <option value="neon">Neon</option>
+      </select>
+
+      <p id="videoTime">00:00</p>
+
+      <button id="exportVideo" type="button">Export captioned video</button>
+      <p class="help">
+        Export availability depends on your browser. Test a short video first.
+      </p>
+    </section>
+
+    <section id="saved" class="page">
+      <h2>Saved Captions</h2>
+      <button id="clearSaved" type="button">Clear saved captions</button>
+      <div id="savedResults" class="card-grid"></div>
+    </section>
   </main>
 
-</div>
-
-
-<script src="script.js"></script>
-
+  <footer>
+    <p>Editors Caption AI · Made for video editors</p>
+  </footer>
 </body>
 </html>
