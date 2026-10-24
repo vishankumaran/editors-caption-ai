@@ -1,765 +1,931 @@
 "use strict";
 
-/* =========================================================
-   EDITORS CAPTION AI — PROFESSIONAL JAVASCRIPT
-   File: script.js
-   ========================================================= */
+const $ = id => document.getElementById(id);
 
+const captionDatabase = {
+  attitude: {
+    thunglish: [
+      "En route, en rules.",
+      "Naan silent ah irundhaalum, en level vera.",
+      "En vazhi thani vazhi."
+    ],
+    tamil: [
+      "என் வழி தனி வழி.",
+      "அமைதியே என் பலம்.",
+      "என் பயணம் என் விதிகள்."
+    ],
+    english: [
+      "My journey, my rules.",
+      "Quiet confidence. Unmatched focus.",
+      "I define my own path."
+    ],
+    mixed: [
+      "Silent mode. Mass attitude.",
+      "Own path. என் விதிகள்.",
+      "Less talk, more action."
+    ]
+  },
+  love: {
+    thunglish: [
+      "Un smile dhaan en favourite scene.",
+      "Un kooda irundha podhum.",
+      "Every moment, un nyabagam."
+    ],
+    tamil: [
+      "உன் சிரிப்பே எனக்குப் பிடித்த காட்சி.",
+      "உன்னுடன் இருந்தால் போதும்.",
+      "ஒவ்வொரு நொடியும் உன் நினைவு."
+    ],
+    english: [
+      "You make ordinary moments special.",
+      "My favourite place is beside you.",
+      "Some people feel like home."
+    ],
+    mixed: [
+      "My favourite person, என் உலகம்.",
+      "One smile. ஆயிரம் நினைவுகள்.",
+      "You and me, ஒரு அழகான கதை."
+    ]
+  },
+  sad: {
+    thunglish: [
+      "Sirippukku pinnadi sila kadhaigal.",
+      "Sila memories marakka mudiyadhu.",
+      "Manasu solladha vaarthaigal."
+    ],
+    tamil: [
+      "சிரிப்புக்குப் பின்னால் சில கதைகள்.",
+      "சில நினைவுகளை மறக்க முடியாது.",
+      "மனசு சொல்லாத வார்த்தைகள்."
+    ],
+    english: [
+      "Some feelings have no words.",
+      "Not every story gets an ending.",
+      "Healing takes its own time."
+    ],
+    mixed: [
+      "Silent heart, ஆயிரம் கதைகள்.",
+      "Memories remain, காலம் நகரும்.",
+      "Some chapters, மறக்க முடியாது."
+    ]
+  },
+  friendship: {
+    thunglish: [
+      "Friends illa, family.",
+      "Namma memories always special.",
+      "Kadaisi varaikkum gang."
+    ],
+    tamil: [
+      "நண்பர்கள் அல்ல, குடும்பம்.",
+      "நம் நினைவுகள் என்றும் அழகு.",
+      "நட்பு என்றும் தொடரும்."
+    ],
+    english: [
+      "Good friends, great memories.",
+      "Different people, one team.",
+      "Real friendship never goes out of style."
+    ],
+    mixed: [
+      "Forever gang, என்றும் நட்பு.",
+      "Good vibes, நம்ம gang.",
+      "One team. ஆயிரம் memories."
+    ]
+  },
+  mass: {
+    thunglish: [
+      "Entry simple, impact massive.",
+      "Scene namma pakkam.",
+      "Vibe eh vera level."
+    ],
+    tamil: [
+      "வருகை எளிமை, தாக்கம் பெரிது.",
+      "காட்சி நம் பக்கம்.",
+      "தனி அடையாளம், தனி பயணம்."
+    ],
+    english: [
+      "Make the moment count.",
+      "Confidence speaks for itself.",
+      "Create your own highlight."
+    ],
+    mixed: [
+      "Mass entry, தனி style.",
+      "Own the moment, உன் வழியில்.",
+      "Big energy, பெரிய கனவு."
+    ]
+  },
+  gaming: {
+    thunglish: [
+      "Game on, focus strong.",
+      "Practice dhaan real power.",
+      "One match, one mission."
+    ],
+    tamil: [
+      "பயிற்சியே உண்மையான பலம்.",
+      "ஒவ்வொரு ஆட்டமும் ஒரு பாடம்.",
+      "கவனம் தான் வெற்றியின் தொடக்கம்."
+    ],
+    english: [
+      "Play smart. Learn every round.",
+      "Focus on the next move.",
+      "Every match is a new challenge."
+    ],
+    mixed: [
+      "Game mode, full focus.",
+      "Practice daily, வெற்றி வரும்.",
+      "Next round, புதிய வாய்ப்பு."
+    ]
+  },
+  motivation: {
+    thunglish: [
+      "Slow ah ponaalum stop aagadha.",
+      "Daily konjam better.",
+      "Dream ku work pannu."
+    ],
+    tamil: [
+      "மெதுவாகச் சென்றாலும் நிற்காதே.",
+      "தினமும் கொஞ்சம் முன்னேறு.",
+      "கனவுகளுக்காக உழை."
+    ],
+    english: [
+      "Progress matters more than perfection.",
+      "Keep learning. Keep moving.",
+      "Small steps create big change."
+    ],
+    mixed: [
+      "Keep going, நம்பிக்கையுடன்.",
+      "Small steps, பெரிய மாற்றம்.",
+      "Dream big, தினமும் முயற்சி செய்."
+    ]
+  },
+  funny: {
+    thunglish: [
+      "Plan perusa, execution nalaikku.",
+      "Enakku advice venam, snacks podhum.",
+      "Battery low, attitude high."
+    ],
+    tamil: [
+      "திட்டம் பெரியது, செயல் நாளைக்கு.",
+      "அறிவுரை வேண்டாம், சிற்றுண்டி போதும்.",
+      "பேட்டரி குறைவு, உற்சாகம் அதிகம்."
+    ],
+    english: [
+      "Professional at postponing plans.",
+      "Loading motivation... please wait.",
+      "Too busy doing absolutely nothing."
+    ],
+    mixed: [
+      "Battery low, energy எங்கே?",
+      "Plan ready, தூக்கம் pending.",
+      "No stress, சாப்பாடு first."
+    ]
+  },
+  life: {
+    thunglish: [
+      "Life ah enjoy pannu.",
+      "Ellam oru experience dhaan.",
+      "Namma time varum."
+    ],
+    tamil: [
+      "வாழ்க்கையை ரசித்து வாழ்.",
+      "ஒவ்வொன்றும் ஒரு அனுபவம்.",
+      "நம் நேரம் வரும்."
+    ],
+    english: [
+      "Enjoy the little things.",
+      "Every day is a new page.",
+      "Let life unfold at its own pace."
+    ],
+    mixed: [
+      "Trust the process, நம்பிக்கையுடன்.",
+      "One life, நிறைய கதைகள்.",
+      "New day, புதிய வாய்ப்பு."
+    ]
+  },
+  travel: {
+    thunglish: [
+      "Route pudhusu, memories pudhusu.",
+      "Travel mode on.",
+      "Oru trip, neraya stories."
+    ],
+    tamil: [
+      "புதிய பாதை, புதிய நினைவுகள்.",
+      "பயணமே ஒரு பாடம்.",
+      "ஒவ்வொரு இடமும் ஒரு கதை."
+    ],
+    english: [
+      "Collect moments, not just places.",
+      "Take the scenic route.",
+      "New places, fresh perspectives."
+    ],
+    mixed: [
+      "Travel more, உலகம் பெரிது.",
+      "New roads, புதிய நினைவுகள்.",
+      "Adventure starts here."
+    ]
+  },
+  gym: {
+    thunglish: [
+      "Consistency dhaan key.",
+      "Daily effort, better progress.",
+      "Strong mind, steady work."
+    ],
+    tamil: [
+      "தொடர்ச்சியான முயற்சியே முக்கியம்.",
+      "தினமும் முயற்சி செய்.",
+      "மன உறுதி முன்னேற்றத்தைத் தரும்."
+    ],
+    english: [
+      "Progress comes from consistency.",
+      "Show up and do your best.",
+      "Build habits that support your goals."
+    ],
+    mixed: [
+      "Stay consistent, முன்னேற்றம் வரும்.",
+      "Strong mindset, தினமும் முயற்சி.",
+      "One step stronger."
+    ]
+  },
+  edit: {
+    thunglish: [
+      "Frames la feel irukkanum.",
+      "Every cut has a story.",
+      "Colour grade, create a vibe."
+    ],
+    tamil: [
+      "ஒவ்வொரு காட்சிக்கும் ஒரு உணர்வு.",
+      "ஒவ்வொரு வெட்டிலும் ஒரு கதை.",
+      "நிறங்களால் உணர்வை உருவாக்கு."
+    ],
+    english: [
+      "Every frame tells a story.",
+      "Cut with purpose. Create with feeling.",
+      "Turn moments into memories."
+    ],
+    mixed: [
+      "One frame, ஆயிரம் feelings.",
+      "Edit with passion, create with purpose.",
+      "Visual story, தனி vibe."
+    ]
+  }
+};
 
-/* =========================================================
-   1. HELPERS
-   ========================================================= */
+const templateData = [
+  {name:"Cinematic", category:"cinematic", cls:"cinematic", sample:"YOUR STORY"},
+  {name:"Neon Glow", category:"neon", cls:"neon", sample:"NIGHT VIBES"},
+  {name:"Minimal", category:"minimal", cls:"minimal", sample:"LESS IS MORE"},
+  {name:"Bold Title", category:"cinematic", cls:"bold", sample:"NO LIMITS"},
+  {name:"Pink Glow", category:"neon", cls:"pink", sample:"DREAM BIG"},
+  {name:"Clean White", category:"minimal", cls:"clean", sample:"NEW CHAPTER"},
+  {name:"Social Pop", category:"social", cls:"social", sample:"GOOD VIBES"},
+  {name:"Golden Title", category:"cinematic", cls:"gold", sample:"THE MOMENT"},
+  {name:"Blue Neon", category:"neon", cls:"blue", sample:"NEXT LEVEL"},
+  {name:"Simple Subtitle", category:"minimal", cls:"subtitle", sample:"A LITTLE STORY"},
+  {name:"Creator Style", category:"social", cls:"creator", sample:"MADE TO CREATE"},
+  {name:"Night Edit", category:"neon", cls:"night", sample:"AFTER DARK"}
+];
 
-const $ = (id) => document.getElementById(id);
+let savedCaptions = loadSaved();
+let videoCaptions = [];
+let videoURL = "";
+let exportBusy = false;
 
-const safeText = (value) => String(value ?? "");
-
-const escapeHTML = (value) => safeText(value)
-  .replace(/&/g, "&amp;")
-  .replace(/</g, "&lt;")
-  .replace(/>/g, "&gt;")
-  .replace(/"/g, "&quot;")
-  .replace(/'/g, "&#039;");
-
-function setStatus(message) {
-  const el = $("videoStatus");
-  if (el) el.textContent = message;
+function loadSaved() {
+  try {
+    return JSON.parse(localStorage.getItem("eca-saved") || "[]");
+  } catch {
+    return [];
+  }
 }
 
-function formatTime(seconds) {
-  seconds = Math.max(0, Number(seconds) || 0);
-
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-
-  return (
-    String(mins).padStart(2, "0") +
-    ":" +
-    String(secs).padStart(2, "0")
-  );
+function storeSaved() {
+  localStorage.setItem("eca-saved", JSON.stringify(savedCaptions));
 }
 
-function formatSRTTime(seconds) {
-  seconds = Math.max(0, Number(seconds) || 0);
-
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = Math.floor(seconds % 60);
-  const milliseconds = Math.floor((seconds % 1) * 1000);
-
-  return (
-    String(hours).padStart(2, "0") + ":" +
-    String(minutes).padStart(2, "0") + ":" +
-    String(secs).padStart(2, "0") + "," +
-    String(milliseconds).padStart(3, "0")
-  );
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[char]));
 }
 
 function downloadBlob(blob, filename) {
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-
-  a.href = url;
-  a.download = filename;
-
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 3000);
 }
 
-async function copyText(text) {
+function switchTab(tab) {
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.toggle("active", page.id === tab);
+  });
+
+  document.querySelectorAll(".nav-item").forEach(button => {
+    button.classList.toggle("active", button.dataset.tab === tab);
+  });
+}
+
+function renderCaptionResults() {
+  const category = $("category").value;
+  const language = $("language").value;
+  const keyword = $("keywords").value.trim();
+  const base = captionDatabase[category]?.[language] || [];
+  const results = keyword
+    ? base.map(text => `${text} ${keyword}`)
+    : [...base];
+
+  $("resultCount").textContent = `${results.length} captions`;
+
+  $("captionResults").innerHTML = results.map((caption, index) => `
+    <article class="card">
+      <p>${escapeHTML(caption)}</p>
+      <div class="button-row">
+        <button type="button" data-copy="${index}">Copy</button>
+        <button type="button" data-save="${index}">Save</button>
+        <button type="button" data-use="${index}">Use in video</button>
+      </div>
+    </article>
+  `).join("");
+
+  $("captionResults").querySelectorAll("[data-copy]").forEach(button => {
+    button.addEventListener("click", () => {
+      copyText(results[Number(button.dataset.copy)]);
+    });
+  });
+
+  $("captionResults").querySelectorAll("[data-save]").forEach(button => {
+    button.addEventListener("click", () => {
+      const text = results[Number(button.dataset.save)];
+      if (!savedCaptions.includes(text)) savedCaptions.unshift(text);
+      storeSaved();
+      renderSaved();
+      button.textContent = "Saved";
+    });
+  });
+
+  $("captionResults").querySelectorAll("[data-use]").forEach(button => {
+    button.addEventListener("click", () => {
+      $("manualText").value = results[Number(button.dataset.use)];
+      updateVideoCaption();
+      switchTab("video");
+    });
+  });
+}
+
+function copyText(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert("Copied!");
+    }).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const area = document.createElement("textarea");
+  area.value = text;
+  document.body.appendChild(area);
+  area.select();
+
   try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch (_) {
-    const area = document.createElement("textarea");
+    document.execCommand("copy");
+    alert("Copied!");
+  } catch {
+    alert("Copy failed. Please select and copy the text manually.");
+  }
 
-    area.value = text;
-    area.style.position = "fixed";
-    area.style.opacity = "0";
+  area.remove();
+}
 
-    document.body.appendChild(area);
-    area.select();
+function renderTemplates() {
+  const category = $("templateCategory").value;
+  const search = $("templateSearch").value.toLowerCase();
 
-    let copied = false;
+  const list = templateData.filter(item =>
+    (category === "all" || item.category === category) &&
+    item.name.toLowerCase().includes(search)
+  );
+
+  $("templateResults").innerHTML = list.map(item => `
+    <article class="card">
+      <div class="font-preview ${item.cls}">${escapeHTML(item.sample)}</div>
+      <h3>${escapeHTML(item.name)}</h3>
+      <button type="button" data-template="${escapeHTML(item.sample)}">
+        Use template
+      </button>
+    </article>
+  `).join("");
+
+  $("templateResults").querySelectorAll("[data-template]").forEach(button => {
+    button.addEventListener("click", () => {
+      $("manualText").value = button.dataset.template;
+      updateVideoCaption();
+      switchTab("video");
+    });
+  });
+}
+
+function renderSaved() {
+  $("savedResults").innerHTML = savedCaptions.map((text, index) => `
+    <article class="card">
+      <p>${escapeHTML(text)}</p>
+      <button type="button" data-saved-use="${index}">Use in video</button>
+      <button type="button" data-saved-copy="${index}">Copy</button>
+    </article>
+  `).join("") || "<p>No saved captions yet.</p>";
+
+  $("savedResults").querySelectorAll("[data-saved-use]").forEach(button => {
+    button.addEventListener("click", () => {
+      $("manualText").value = savedCaptions[Number(button.dataset.savedUse)];
+      updateVideoCaption();
+      switchTab("video");
+    });
+  });
+
+  $("savedResults").querySelectorAll("[data-saved-copy]").forEach(button => {
+    button.addEventListener("click", () => {
+      copyText(savedCaptions[Number(button.dataset.savedCopy)]);
+    });
+  });
+}
+
+function updateFontPreview() {
+  const preview = $("fontPreview");
+  preview.textContent = $("fontInput").value;
+  preview.style.fontFamily = $("fontFamily").value;
+  preview.style.fontWeight = $("fontWeight").value;
+  preview.style.color = $("fontColor").value;
+  preview.style.background = $("fontBg").value;
+  preview.style.fontSize = `${$("fontSize").value}px`;
+  preview.style.letterSpacing = `${$("letterSpacing").value}px`;
+
+  $("fontSizeLabel").textContent = `${$("fontSize").value}px`;
+  $("spacingLabel").textContent = `${$("letterSpacing").value}px`;
+}
+
+function updateVideoCaption() {
+  const caption = $("videoCaption");
+  caption.textContent = $("manualText").value;
+  caption.style.fontFamily = $("captionFont").value;
+  caption.style.color = $("captionColor").value;
+  caption.style.fontSize = `${$("captionSize").value}px`;
+
+  const outline = Number($("outlineWidth").value);
+  caption.style.webkitTextStroke =
+    `${outline}px ${$("outlineColor").value}`;
+
+  caption.style.textShadow = $("captionShadow").value === "on"
+    ? "2px 2px 3px #000"
+    : "none";
+
+  caption.style.background = $("captionLayout").value === "boxed"
+    ? "rgba(0,0,0,.65)"
+    : "transparent";
+
+  if ($("captionLayout").value === "highlight") {
+    caption.style.background = $("highlightColor").value;
+    caption.style.color = "#111";
+  }
+
+  caption.style.padding = $("captionLayout").value === "normal"
+    ? "0"
+    : "8px";
+
+  caption.style.top = "auto";
+  caption.style.bottom = "auto";
+
+  const position = $("captionPosition").value;
+
+  if (position === "top") caption.style.top = "8%";
+  else if (position === "middle") caption.style.top = "45%";
+  else caption.style.bottom = "8%";
+}
+
+function renderVideoCaptionList() {
+  $("timelineCount").textContent =
+    `${videoCaptions.length} caption${videoCaptions.length === 1 ? "" : "s"}`;
+
+  $("videoCaptionList").innerHTML = videoCaptions.map((item, index) => `
+    <div class="caption-row">
+      <strong>${escapeHTML(item.text)}</strong>
+      <p>${item.start.toFixed(2)}s – ${item.end.toFixed(2)}s</p>
+      <button type="button" data-remove-caption="${index}">Remove</button>
+    </div>
+  `).join("") || "<p>No captions added yet.</p>";
+
+  $("videoCaptionList").querySelectorAll("[data-remove-caption]").forEach(button => {
+    button.addEventListener("click", () => {
+      videoCaptions.splice(Number(button.dataset.removeCaption), 1);
+      renderVideoCaptionList();
+      updateVideoCaption();
+    });
+  });
+}
+
+function getActiveCaption(time) {
+  return videoCaptions.find(item => time >= item.start && time <= item.end);
+}
+
+function updateTimedCaption() {
+  if (!$("videoPlayer").src) return;
+
+  const active = getActiveCaption($("videoPlayer").currentTime);
+
+  $("videoCaption").textContent = active ? active.text : $("manualText").value;
+
+  $("videoTime").textContent =
+    `${$("videoPlayer").currentTime.toFixed(1)}s`;
+
+  updateVideoCaption();
+}
+
+function formatSrtTime(seconds) {
+  const totalMs = Math.max(0, Math.round(seconds * 1000));
+  const hours = Math.floor(totalMs / 3600000);
+  const minutes = Math.floor((totalMs % 3600000) / 60000);
+  const secs = Math.floor((totalMs % 60000) / 1000);
+  const ms = totalMs % 1000;
+
+  return `${String(hours).padStart(2,"0")}:` +
+    `${String(minutes).padStart(2,"0")}:` +
+    `${String(secs).padStart(2,"0")},` +
+    `${String(ms).padStart(3,"0")}`;
+}
+
+function downloadSRT() {
+  if (!videoCaptions.length) {
+    alert("Add at least one caption first.");
+    return;
+  }
+
+  const sorted = [...videoCaptions].sort((a,b) => a.start - b.start);
+
+  const srt = sorted.map((item, index) =>
+    `${index + 1}\n${formatSrtTime(item.start)} --> ` +
+    `${formatSrtTime(item.end)}\n${item.text}\n`
+  ).join("\n");
+
+  downloadBlob(
+    new Blob([srt], {type:"text/plain;charset=utf-8"}),
+    "captions.srt"
+  );
+}
+
+function chooseRecorderType() {
+  const types = [
+    "video/webm;codecs=vp9,opus",
+    "video/webm;codecs=vp8,opus",
+    "video/webm"
+  ];
+
+  return types.find(type =>
+    window.MediaRecorder &&
+    MediaRecorder.isTypeSupported(type)
+  ) || "";
+}
+
+async function exportVideo() {
+  if (exportBusy) return;
+
+  const video = $("videoPlayer");
+
+  if (!video.src || !video.videoWidth) {
+    alert("Please upload a video and wait for its preview to load.");
+    return;
+  }
+
+  if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) {
+    alert("Video export is not supported by this browser. Try a recent desktop Chrome browser.");
+    return;
+  }
+
+  const mimeType = chooseRecorderType();
+
+  if (!mimeType) {
+    alert("This browser does not support a compatible WebM recording format.");
+    return;
+  }
+
+  exportBusy = true;
+  $("exportVideo").disabled = true;
+  $("videoStatus").textContent = "Preparing export…";
+
+  const canvas = document.createElement("canvas");
+  const maxWidth = 1080;
+  const scale = Math.min(1, maxWidth / video.videoWidth);
+
+  canvas.width = Math.max(2, Math.floor(video.videoWidth * scale));
+  canvas.height = Math.max(2, Math.floor(video.videoHeight * scale));
+
+  const ctx = canvas.getContext("2d");
+  const canvasStream = canvas.captureStream(30);
+
+  let mediaStream = canvasStream;
+  let originalAudioTracks = [];
+  let originalPlaying = !video.paused;
+  let startTime = video.currentTime;
+  let chunks = [];
+  let recorder;
+
+  try {
+    const capture = video.captureStream || video.mozCaptureStream;
+
+    if (typeof capture === "function") {
+      try {
+        const sourceStream = capture.call(video);
+        originalAudioTracks = sourceStream.getAudioTracks();
+        if (originalAudioTracks.length) {
+          mediaStream = new MediaStream([
+            ...canvasStream.getVideoTracks(),
+            ...originalAudioTracks
+          ]);
+        }
+      } catch (error) {
+        console.warn("Original audio capture unavailable", error);
+      }
+    }
+
+    recorder = new MediaRecorder(mediaStream, {mimeType});
+
+    const finished = new Promise((resolve, reject) => {
+      recorder.ondataavailable = event => {
+        if (event.data && event.data.size) chunks.push(event.data);
+      };
+
+      recorder.onerror = () => reject(new Error("Recording failed."));
+      recorder.onstop = resolve;
+    });
+
+    function drawFrame() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      try {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      } catch {}
+
+      const time = video.currentTime;
+      const active = getActiveCaption(time);
+
+      const text = active ? active.text : $("manualText").value.trim();
+
+      if (text) {
+        const fontSize = Math.max(18, Number($("captionSize").value) * scale);
+        const x = canvas.width / 2;
+        let y;
+
+        if ($("captionPosition").value === "top") y = canvas.height * 0.12;
+        else if ($("captionPosition").value === "middle") y = canvas.height * 0.52;
+        else y = canvas.height * 0.88;
+
+        ctx.font = `900 ${fontSize}px ${$("captionFont").value}`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.lineJoin = "round";
+
+        const maxTextWidth = canvas.width * 0.9;
+        const words = text.split(/\s+/);
+        const lines = [];
+        let line = "";
+
+        for (const word of words) {
+          const trial = line ? `${line} ${word}` : word;
+
+          if (ctx.measureText(trial).width > maxTextWidth && line) {
+            lines.push(line);
+            line = word;
+          } else {
+            line = trial;
+          }
+        }
+
+        if (line) lines.push(line);
+
+        const lineHeight = fontSize * 1.2;
+        const boxHeight = lines.length * lineHeight;
+        const startY = y - boxHeight / 2;
+
+        lines.forEach((part, index) => {
+          const lineY = startY + index * lineHeight + lineHeight / 2;
+
+          if ($("captionLayout").value === "boxed") {
+            const width = Math.min(
+              maxTextWidth,
+              ctx.measureText(part).width + fontSize * 0.5
+            );
+
+            ctx.fillStyle = "rgba(0,0,0,0.7)";
+            ctx.fillRect(x - width/2, lineY - lineHeight/2, width, lineHeight);
+          }
+
+          ctx.lineWidth = Math.max(0, Number($("outlineWidth").value) * scale);
+          ctx.strokeStyle = $("outlineColor").value;
+          ctx.fillStyle = $("captionLayout").value === "highlight"
+            ? "#111111"
+            : $("captionColor").value;
+
+          if (ctx.lineWidth > 0) ctx.strokeText(part, x, lineY, maxTextWidth);
+          ctx.fillText(part, x, lineY, maxTextWidth);
+        });
+      }
+
+      if (recorder && recorder.state === "recording" && !video.ended) {
+        requestAnimationFrame(drawFrame);
+      }
+    }
+
+    video.pause();
 
     try {
-      copied = document.execCommand("copy");
-    } catch (_) {
-      copied = false;
+      video.currentTime = 0;
+      await new Promise(resolve => {
+        if (video.readyState >= 2) resolve();
+        else video.addEventListener("loadeddata", resolve, {once:true});
+      });
+    } catch {}
+
+    await video.play();
+
+    recorder.start(1000);
+    drawFrame();
+
+    $("videoStatus").textContent = "Exporting video… keep this page open.";
+
+    await new Promise(resolve => {
+      video.addEventListener("ended", resolve, {once:true});
+      video.addEventListener("error", resolve, {once:true});
+    });
+
+    if (recorder.state !== "inactive") recorder.stop();
+    await finished;
+
+    if (!chunks.length) {
+      throw new Error("No video data was recorded.");
     }
 
-    area.remove();
-    return copied;
+    const blob = new Blob(chunks, {type: mimeType});
+    downloadBlob(blob, "editors-caption-ai.webm");
+
+    $("videoStatus").textContent =
+      originalAudioTracks.length
+        ? "Export complete. Check the downloaded video and audio."
+        : "Export complete. This browser could not capture the original audio; the downloaded video may be silent.";
+
+  } catch (error) {
+    console.error(error);
+    if (recorder && recorder.state !== "inactive") {
+      try { recorder.stop(); } catch {}
+    }
+    $("videoStatus").textContent = `Export failed: ${error.message}`;
+    alert(`Video export failed: ${error.message}`);
+  } finally {
+    video.pause();
+
+    try {
+      video.currentTime = startTime;
+    } catch {}
+
+    if (originalPlaying) {
+      video.play().catch(() => {});
+    }
+
+    canvasStream.getTracks().forEach(track => track.stop());
+
+    exportBusy = false;
+    $("exportVideo").disabled = false;
   }
 }
 
-function showEmpty(container, message) {
-  container.innerHTML =
-    '<div class="empty-state">' +
-    escapeHTML(message) +
-    "</div>";
-}
+function initializeApp() {
+  document.querySelectorAll("[data-tab]").forEach(button => {
+    button.addEventListener("click", () => switchTab(button.dataset.tab));
+  });
 
-function getStoredJSON(key, fallback) {
-  try {
-    const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : fallback;
-  } catch (_) {
-    return fallback;
-  }
-}
+  $("generateBtn").addEventListener("click", renderCaptionResults);
 
-function saveStoredJSON(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-    return true;
-  } catch (_) {
-    return false;
-  }
-}
-
-
-/* =========================================================
-   2. CAPTION DATABASE
-   ========================================================= */
-
-const captionDatabase = {
-
-  attitude: {
-    thunglish: [
-      "En route vera, level vera.",
-      "Silent ah irukken, weak nu nenakkadha.",
-      "En game en rules.",
-      "Mass kaatta noise thevai illa.",
-      "Namma vibe ah copy panna mudiyadhu.",
-      "Respect kudutha double ah thirumbi varum.",
-      "Naan maarala, upgrade aanen.",
-      "Scene poda varala, scene create panna vandhen.",
-      "Low profile, high standards.",
-      "En silence kooda oru statement."
-    ],
-
-    tamil: [
-      "என் வழி தனி வழி.",
-      "அமைதி என்பது பலவீனம் அல்ல.",
-      "என் வாழ்க்கை, என் விதிகள்.",
-      "நம்பிக்கையே என் அடையாளம்.",
-      "என்னைப் புரிந்துகொள்ள நேரம் தேவை.",
-      "வார்த்தைகளை விட செயல்கள் பேசட்டும்.",
-      "தனித்துவமே என் பலம்.",
-      "என் பாதையை நானே உருவாக்குகிறேன்."
-    ],
-
-    english: [
-      "My lane. My rules.",
-      "Silent moves, strong results.",
-      "Confidence speaks without noise.",
-      "Different mindset, different destination.",
-      "I don't follow the noise.",
-      "Built on standards, not approval.",
-      "My journey, my signature.",
-      "Less talk. More purpose."
-    ],
-
-    mixed: [
-      "No noise. Only impact.",
-      "Own lane. Own game.",
-      "Vibe: UNMATCHED.",
-      "Silent mode. Savage focus.",
-      "Different by design.",
-      "LEVEL UP."
-    ]
-  },
-
-
-  love: {
-    thunglish: [
-      "Un smile dhaan en favourite scene.",
-      "Un kooda irundha time fast ah pogudhu.",
-      "Nee irundha podhum, vibe complete.",
-      "Un presence dhaan en peace.",
-      "Oru paarvai, thousand feelings.",
-      "Un memories always on repeat.",
-      "Love na words illa, little moments.",
-      "Un sirippula en world irukku.",
-      "Nee pakkathula irundha ellam beautiful.",
-      "Simple moments, special memories."
-    ],
-
-    tamil: [
-      "உன் சிரிப்பில் என் உலகம் இருக்கிறது.",
-      "சில நிமிடங்கள், ஆயிரம் நினைவுகள்.",
-      "உன்னுடன் இருக்கும் தருணங்கள் அழகானவை.",
-      "சொல்லாத வார்த்தைகளிலும் காதல் இருக்கிறது.",
-      "உன் நினைவுகள் என் மனதில் இசையாகிறது.",
-      "அன்பு சிறிய விஷயங்களில் தெரியும்.",
-      "உன் பார்வை ஒரு கவிதை.",
-      "இதயம் நினைப்பதை வார்த்தைகள் சொல்லாது."
-    ],
-
-    english: [
-      "Some people feel like home.",
-      "You make ordinary moments special.",
-      "A thousand feelings in one smile.",
-      "Love lives in little things.",
-      "Your presence is my favourite feeling.",
-      "Some moments deserve to last forever.",
-      "A quiet kind of magic.",
-      "Memories written in the heart."
-    ],
-
-    mixed: [
-      "YOU. ALWAYS.",
-      "Love in little moments.",
-      "One smile. Endless memories.",
-      "Soft hearts, strong feelings.",
-      "Our kind of magic.",
-      "STAY A LITTLE LONGER."
-    ]
-  },
-
-
-  sad: {
-    thunglish: [
-      "Sirippu irukku, aana peace konjam missing.",
-      "Sila feelings explain panna mudiyadhu.",
-      "Time pogudhu, memories stay aagudhu.",
-      "Ellam okay nu solradhu easy.",
-      "Sila silence ku meaning adhigam.",
-      "Old memories, new lessons.",
-      "Manasu solladha kadhai neraya irukku.",
-      "Moving on um oru journey dhaan.",
-      "Sila moments marakka mudiyadhu.",
-      "Everything changes, memories remain."
-    ],
-
-    tamil: [
-      "சில உணர்வுகளுக்கு வார்த்தைகள் இல்லை.",
-      "காலம் மாறினாலும் நினைவுகள் மாறாது.",
-      "சில அமைதிகள் நிறைய பேசுகின்றன.",
-      "மனதில் சொல்லாத கதைகள் பல.",
-      "நினைவுகள் சில நேரம் பாடமாகின்றன.",
-      "எல்லா மாற்றங்களுக்கும் ஒரு காரணம் உண்டு.",
-      "கடந்து செல்வதும் ஒரு பயணம்தான்.",
-      "சில தருணங்கள் மனதில் தங்கிவிடும்."
-    ],
-
-    english: [
-      "Some feelings have no words.",
-      "Time moves, memories stay.",
-      "Quiet moments carry loud feelings.",
-      "Healing takes its own time.",
-      "Not every story needs an explanation.",
-      "Some chapters change us forever.",
-      "Learning to let time do its work.",
-      "Every ending teaches something."
-    ],
-
-    mixed: [
-      "SILENT FEELINGS.",
-      "Memories never mute.",
-      "Some chapters stay.",
-      "Healing in progress.",
-      "Quiet, not empty.",
-      "TIME. CHANGE. GROWTH."
-    ]
-  },
-
-
-  friendship: {
-    thunglish: [
-      "Friends illa, family dhaan.",
-      "Namma memories ku expiry date illa.",
-      "Scene edhuva irundhalum team onnu dhaan.",
-      "Oru gang, aayiram stories.",
-      "Namma friendship always different level.",
-      "Laughing at things nobody understands.",
-      "Distance irundhalum bond same.",
-      "Old friends, unlimited memories.",
-      "Namma gang ku comparison illa.",
-      "Together dhaan best scenes."
-    ],
-
-    tamil: [
-      "நண்பர்கள் அல்ல, இன்னொரு குடும்பம்.",
-      "நட்பின் நினைவுகளுக்கு முடிவில்லை.",
-      "ஒரு கூட்டம், ஆயிரம் கதைகள்.",
-      "தூரம் இருந்தாலும் நட்பு மாறாது.",
-      "சிரிப்பிலும் சிக்கலிலும் நண்பர்கள்.",
-      "உண்மையான நட்பு காலத்தைக் கடக்கும்.",
-      "நண்பர்களுடன் ஒவ்வொரு நாளும் நினைவு.",
-      "நட்பு என்பது மனதின் உறவு."
-    ],
-
-    english: [
-      "Friends by chance, family by choice.",
-      "One crew, countless memories.",
-      "Real friendship needs no performance.",
-      "Different people, one unforgettable story.",
-      "Good friends make ordinary days legendary.",
-      "Distance changes places, not bonds.",
-      "Our memories deserve their own movie.",
-      "Together is a whole different vibe."
-    ],
-
-    mixed: [
-      "ONE CREW. ONE STORY.",
-      "Friends. Family. Forever.",
-      "MEMORY MAKERS.",
-      "Real ones only.",
-      "Different souls, same vibe.",
-      "FRIENDSHIP UNFILTERED."
-    ]
-  },
-
-
-  mass: {
-    thunglish: [
-      "Entry simple, impact heavy.",
-      "Screen la oru vibe, life la oru level.",
-      "Mass ku definition thevai illa.",
-      "Build-up illa, confidence podhum.",
-      "Indha frame ku replay mandatory.",
-      "Oru look, full scene change.",
-      "Hero moment loading.",
-      "Background music ready ah?",
-      "Frame freeze, vibe increase.",
-      "This scene deserves slow motion."
-    ],
-
-    tamil: [
-      "வருகை எளிது, தாக்கம் பெரியது.",
-      "ஒவ்வொரு தருணமும் ஒரு காட்சி.",
-      "நம்பிக்கைதான் உண்மையான பலம்.",
-      "இந்த நிமிடம் நினைவாகட்டும்.",
-      "ஒரு பார்வை, ஆயிரம் அர்த்தங்கள்.",
-      "என் பயணம் இன்னும் தொடர்கிறது.",
-      "காட்சியை விட உணர்வு முக்கியம்.",
-      "ஒவ்வொரு அடியும் ஒரு புதிய தொடக்கம்."
-    ],
-
-    english: [
-      "ONE FRAME. ALL IMPACT.",
-      "Main character energy.",
-      "Every entrance tells a story.",
-      "Built for the big moment.",
-      "Make the frame unforgettable.",
-      "Let the scene speak.",
-      "Confidence in every frame.",
-      "This moment deserves a replay."
-    ],
-
-    mixed: [
-      "MASS MODE: ON.",
-      "FRAME. FREEZE. REPLAY.",
-      "ICONIC ENERGY.",
-      "ENTRY OF THE MOMENT.",
-      "NO INTRO NEEDED.",
-      "REPLAY THAT FRAME."
-    ]
-  },
-
-
-  gaming: {
-    thunglish: [
-      "Lobby la silent, match la violence.",
-      "Aim clean, focus sharp.",
-      "Game enna, mindset dhaan main.",
-      "Clutch moment ku naan ready.",
-      "Squad oda vibe vera level.",
-      "Headshot dreams, practice scenes.",
-      "Rank vida skill important.",
-      "Every match oru new lesson.",
-      "One tap, clean finish.",
-      "Game on, distractions off."
-    ],
-
-    tamil: [
-      "கவனம் இருந்தால் வெற்றி அருகில்.",
-      "ஒவ்வொரு போட்டியும் ஒரு பாடம்.",
-      "திறமை பயிற்சியில் உருவாகிறது.",
-      "குழுவுடன் விளையாட்டு இன்னும் சிறப்பு.",
-      "வெற்றிக்கு கவனமும் பொறுமையும் தேவை.",
-      "முயற்சியே முன்னேற்றத்தின் வழி."
-    ],
-
-    english: [
-      "LOCK IN. LEVEL UP.",
-      "Clutch under pressure.",
-      "Skill over noise.",
-      "One squad, one mission.",
-      "Practice builds the highlight.",
-      "Every match writes a new story.",
-      "Focus is the real power-up.",
-      "Make every round count."
-    ],
-
-    mixed: [
-      "CLUTCH MODE.",
-      "GG. NEXT.",
-      "AIM. FOCUS. REPEAT.",
-      "SQUAD ENERGY.",
-      "LEVEL UP.",
-      "GAME FACE ON."
-    ]
-  },
-
-
-  motivation: {
-    thunglish: [
-      "Slow ah ponaalum stop aagadha.",
-      "Daily konjam better aagu.",
-      "Dream ku action thevai.",
-      "Consistency dhaan real power.",
-      "Un journey ah un pace la po.",
-      "Effort today, progress tomorrow.",
-      "Small steps, strong future.",
-      "Focus irundha path clear aagum.",
-      "Mistakes um lessons dhaan.",
-      "Start pannradhu dhaan first victory."
-    ],
-
-    tamil: [
-      "மெதுவாக சென்றாலும் முன்னேறு.",
-      "தொடர்ச்சியான முயற்சியே வெற்றி.",
-      "கனவுகளுக்கு செயல் தேவை.",
-      "ஒவ்வொரு நாளும் புதிதாக கற்றுக்கொள்.",
-      "சிறிய முன்னேற்றமும் முன்னேற்றமே.",
-      "தோல்வியும் ஒரு பாடம்தான்.",
-      "உன் வேகத்தில் முன்னேறு.",
-      "முயற்சிக்கு மதிப்பு உண்டு."
-    ],
-
-    english: [
-      "Progress over perfection.",
-      "Small steps create big change.",
-      "Consistency builds confidence.",
-      "Your pace is still progress.",
-      "Start where you are.",
-      "Make effort your habit.",
-      "Every day is another opportunity.",
-      "Keep showing up for your goals."
-    ],
-
-    mixed: [
-      "PROGRESS > PERFECTION.",
-      "KEEP BUILDING.",
-      "ONE DAY. ONE STEP.",
-      "FOCUS. GROW. REPEAT.",
-      "YOUR NEXT CHAPTER.",
-      "START NOW."
-    ]
-  },
-
-
-  funny: {
-    thunglish: [
-      "Plan perusa, execution tomorrow.",
-      "Battery low, confidence high.",
-      "Naan serious ah irukken... sometimes.",
-      "Life loading, please wait.",
-      "Brain offline, smile online.",
-      "Sleep schedule ku naan stranger.",
-      "Expectation 4K, reality 144p.",
-      "Work mode loading... 1 percent.",
-      "Overthinking ku unlimited data.",
-      "Namma luck ku separate story venum."
-    ],
-
-    tamil: [
-      "திட்டம் பெரியது, தூக்கம் அதைவிட பெரியது.",
-      "மூளை ஓய்வில், சிரிப்பு வேலை செய்கிறது.",
-      "வாழ்க்கை இன்னும் லோடிங் நிலையில்.",
-      "எதிர்பார்ப்பு வேறு, நிஜம் வேறு.",
-      "சில நேரம் நானே எனக்கு புரியவில்லை.",
-      "சிரிப்பே இன்றைய திட்டம்."
-    ],
-
-    english: [
-      "My plans need better management.",
-      "Running on snacks and optimism.",
-      "Reality has entered the chat.",
-      "Professional overthinker.",
-      "Loading motivation... please wait.",
-      "Expectation: cinema. Reality: bloopers.",
-      "Currently buffering.",
-      "I came, I saw, I forgot why."
-    ],
-
-    mixed: [
-      "LOADING... 1%.",
-      "EXPECTATION VS REALITY.",
-      "CHAOS DEPARTMENT.",
-      "LOW BATTERY. HIGH DRAMA.",
-      "BRAIN: OFFLINE.",
-      "PROFESSIONAL NAP PLANNER."
-    ]
-  },
-
-
-  life: {
-    thunglish: [
-      "Life oda pace ellarukkum different.",
-      "Sila lessons late ah dhaan puriyum.",
-      "Change dhaan constant.",
-      "Un peace ah protect pannu.",
-      "Experience dhaan best teacher.",
-      "Nethu lesson, inniku progress.",
-      "Simple life, meaningful moments.",
-      "Ellathukkum oru timing irukku.",
-      "Growth silent ah nadakkum.",
-      "Un story innum mudiyala."
-    ],
-
-    tamil: [
-      "ஒவ்வொருவரின் பயணமும் தனித்துவமானது.",
-      "அனுபவமே சிறந்த ஆசிரியர்.",
-      "அமைதியைக் காப்பது முக்கியம்.",
-      "மாற்றம் வளர்ச்சியின் ஒரு பகுதி.",
-      "ஒவ்வொரு நாளும் ஒரு புதிய வாய்ப்பு.",
-      "எளிமையிலும் அழகு இருக்கிறது.",
-      "உன் கதை இன்னும் தொடர்கிறது.",
-      "நேரம் பல பாடங்களைக் கற்றுத்தரும்."
-    ],
-
-    english: [
-      "Every journey has its own timing.",
-      "Protect your peace.",
-      "Growth often happens quietly.",
-      "Simple moments, meaningful life.",
-      "Experience changes perspective.",
-      "Your story is still unfolding.",
-      "Choose progress over comparison.",
-      "Make room for what matters."
-    ],
-
-    mixed: [
-      "LIFE. LEARN. GROW.",
-      "YOUR OWN TIMELINE.",
-      "PEACE OVER PRESSURE.",
-      "STILL BECOMING.",
-      "MEANING OVER NOISE.",
-      "KEEP YOUR STORY GOING."
-    ]
-  },
-
-
-  travel: {
-    thunglish: [
-      "Road um music um, perfect combo.",
-      "Destination vida journey azhagu.",
-      "New place, fresh memories.",
-      "Travel mode always on.",
-      "Sunset ku explanation thevai illa.",
-      "Nature oda silence vera level.",
-      "Oru trip, neraya stories.",
-      "Wander pannu, memories collect pannu."
-    ],
-
-    tamil: [
-      "பயணத்தில் புதிய நினைவுகள் பிறக்கின்றன.",
-      "இயற்கையின் அமைதி தனி அழகு.",
-      "இலக்கை விட பயணமும் அழகு.",
-      "ஒவ்வொரு பயணமும் புதிய அனுபவம்.",
-      "மலைகளும் கடலும் மனதுக்கு அமைதி தரும்.",
-      "சூரிய அஸ்தமனம் ஒரு கவிதை."
-    ],
-
-    english: [
-      "Collect moments, not just miles.",
-      "Somewhere between lost and found.",
-      "Let the road tell the story.",
-      "New places, new perspectives.",
-      "Chasing light and open skies.",
-      "The journey is the destination.",
-      "A little farther from ordinary."
-    ],
-
-    mixed: [
-      "ROAD. MUSIC. MEMORIES.",
-      "WANDER MORE.",
-      "CHASE THE HORIZON.",
-      "OUT OF OFFICE.",
-      "SUNSET STORIES.",
-      "NEXT STOP: ANYWHERE."
-    ]
-  },
-
-
-  gym: {
-    thunglish: [
-      "Consistency dhaan real transformation.",
-      "Focus on progress, not comparison.",
-      "Every session oru step forward.",
-      "Discipline beats excuses.",
-      "Train smart, recover well.",
-      "Strong habits, steady progress.",
-      "Effort ku shortcut illa.",
-      "One session at a time."
-    ],
-
-    tamil: [
-      "தொடர்ச்சியான பயிற்சி முன்னேற்றம் தரும்.",
-      "ஒவ்வொரு முயற்சியும் ஒரு படி முன்னேற்றம்.",
-      "ஒழுக்கம் வளர்ச்சிக்கு வழிகாட்டும்.",
-      "உடல்நலமும் ஓய்வும் முக்கியம்.",
-      "உன் முன்னேற்றத்தில் கவனம் செலுத்து.",
-      "பயிற்சியில் பொறுமை அவசியம்."
-    ],
-
-    english: [
-      "Consistency is the real flex.",
-      "Progress takes patience.",
-      "Train with purpose.",
-      "Build habits, not pressure.",
-      "Rest is part of the process.",
-      "Strong routines, steady growth.",
-      "One session at a time."
-    ],
-
-    mixed: [
-      "TRAIN. REST. REPEAT.",
-      "CONSISTENCY WINS.",
-      "PROGRESS IN MOTION.",
-      "BUILT BY HABITS.",
-      "DISCIPLINE DAILY.",
-      "STRONGER ROUTINES."
-    ]
-  },
-
-
-  edit: {
-    thunglish: [
-      "Beat ku cut, vibe ku colour.",
-      "Every frame has a feeling.",
-      "Edit la dhaan magic start aagudhu.",
-      "Colour grade speaks louder.",
-      "Transition smooth, story strong.",
-      "One edit, endless replay.",
-      "Frame perfect ah irukkanum.",
-      "Mood set, timeline ready.",
-      "Music hit aana cut hit aaganum.",
-      "Create pannradhu dhaan identity."
-    ],
-
-    tamil: [
-      "ஒவ்வொரு காட்சிக்கும் ஒரு உணர்வு.",
-      "நிறங்களே கதையைச் சொல்லட்டும்.",
-      "திருத்தத்தில் உருவாகும் தனித்துவம்.",
-      "இசையும் காட்சியும் ஒன்றாகட்டும்.",
-      "ஒவ்வொரு ஃப்ரேமும் ஒரு கதை.",
-      "படைப்பாற்றலே அடையாளம்."
-    ],
-
-    english: [
-      "Every frame tells a story.",
-      "Cut to the feeling.",
-      "Colour creates the mood.",
-      "Edit with intention.",
-      "Make every second count.",
-      "Transitions with purpose.",
-      "Your timeline, your signature.",
-      "Create something worth replaying."
-    ],
-
-    mixed: [
-      "CUT. COLOUR. CREATE.",
-      "FRAME BY FRAME.",
-      "EDITORS NEVER SLEEP.",
-      "MOOD IN MOTION.",
-      "REPLAY WORTHY.",
-      "CREATIVE MODE: ON."
-    ]
-  }
-
-};
-
-
-/* =========================================================
-   3. CAPTION GENERATOR
-   ========================================================= */
-
-const categorySelect = $("category");
-const languageSelect = $("language");
-const keywordsInput = $("keywords");
-const captionResults = $("captionResults");
-
-function getCaptionList(category, language) {
-  const group = captionDatabase[category] || captionDatabase.attitude;
-
-  return group[language] || group.english;
-}
-
-function generateCaptions(randomCategory = false) {
-  let category = categorySelect.value;
-  const language = languageSelect.value;
-  const keywords = keywordsInput.value.trim();
-
-  if (randomCategory) {
+  $("randomBtn").addEventListener("click", () => {
     const categories = Object.keys(captionDatabase);
+    $("category").value = categories[Math.floor(Math.random() * categories.length)];
+    const languages = ["thunglish", "tamil", "english", "mixed"];
+    $("language").value = languages[Math.floor(Math.random() * languages.length)];
+    renderCaptionResults();
+  });
 
-    category = categories[
-      Math.floor(Math.random() * categories.length)
-    ];
+  $("category").addEventListener("change", renderCaptionResults);
+  $("language").addEventListener("change", renderCaptionResults);
 
-    categorySelect.value = category;
-  }
+  $("templateCategory").addEventListener("change", renderTemplates);
+  $("templateSearch").addEventListener("input", renderTemplates);
 
-  const captions = getCaptionList(category, language);
+  [
+    "fontInput","fontFamily","fontWeight","fontColor","fontBg",
+    "fontSize","letterSpacing"
+  ].forEach(id => $(id).addEventListener("input", updateFontPreview));
 
-  const shuffled = [...captions].sort(
-    () => Math.random() - 0.5
-  );
+  $("copyFont").addEventListener("click", () => copyText($("fontInput").value));
 
-  const selected = shuffled.slice(
-    0,
-    Math.min(8, shuffled.length)
-  );
+  $("useFont").addEventListener("click", () => {
+    $("manualText").value = $("fontInput").value;
+    $("captionFont").value = $("fontFamily").value;
+    $("captionColor").value = $("fontColor").value;
+    $("captionSize").value = $("fontSize").value;
+    updateVideoCaption();
+    switchTab("video");
+  });
 
-  captionResults.innerHTML = "";
+  [
+    "manualText","captionFont","captionColor","highlightColor","outlineColor",
+    "captionSize","outlineWidth","captionPosition","captionLayout",
+    "captionAnimation","captionShadow"
+  ].forEach(id => $(id).addEventListener("input", updateVideoCaption));
 
-  selected.forEach((caption, index) => {
-    let output = caption;
+  $("videoFile").addEventListener("change", event => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-    if (keywords) {
-      output += " — " + keywords;
+    if (!file.type.startsWith("video/")) {
+      alert("Please select a video file.");
+      event.target.value = "";
+      return;
     }
 
-    const card = document.createElement("article");
-    card.className = "caption-card";
+    if (videoURL) URL.revokeObjectURL(videoURL);
 
-    card.innerHTML = `
-      <div class="caption-card-top">
-        <span class="caption-tag">
-          ${escapeHTML(category)}
-        </span>
+    videoURL = URL.createObjectURL(file);
+    $("videoPlayer").src = videoURL;
+    $("emptyVideo").style.display = "none";
+    $("videoStatus").textContent = `Loaded: ${file.name}`;
 
-        <span class="muted">
-          #${String(index + 1).padStart(2, "0")}
-        </span>
-      </div>
+    $("videoPlayer").load();
+  });
 
-      <p>${escapeHTML(output)}</p>
+  $("videoPlayer").addEventListener("loadedmetadata", () => {
+    $("captionEnd").value = Math.max(1, Math.min(5, $("videoPlayer").duration || 5));
+    updateVideoCaption();
+  });
 
-      <div class="caption-card-actions">
+  $("videoPlayer").addEventListener("timeupdate", updateTimedCaption);
 
-        <button class="small-btn" data-action="copy">
-          Copy
-        </button>
+  $("addVideoCaption").addEventListener("click", () => {
+    const text = $("manualText").value.trim();
+    const start = Number($("captionStart").value);
+    const end = Number($("captionEnd").value);
+    const duration = $("videoPlayer").duration;
 
-        <button class="small-btn" data-action="save">
-          ♡ Save
-        </button>
+    if (!text) {
+      alert("Enter caption text first.");
+      return;
+    }
 
-        <button class="small-btn" data-action="edit">
-          Use in editor →
-        </button>
+    if (!Number.isFinite(start) || !Number.isFinite(end) ||
+        start < 0 || end <= start) {
+      alert("Enter valid start and end times.");
+      return;
+    }
 
-      </div>
-    `;
+    if (Number.isFinite(duration) && end > duration) {
+      alert(`End time cannot exceed the video duration (${duration.toFixed(2)} seconds).`);
+      return;
+    }
 
-    card.querySelector('[data-action="copy"]')
-      .addEventListene
+    videoCaptions.push({text, start, end});
+    renderVideoCaptionList();
+    updateVideoCaption();
+  });
+
+  $("clearVideoCaptions").addEventListener("click", () => {
+    videoCaptions = [];
+    renderVideoCaptionList();
+    updateVideoCaption();
+  });
+
+  $("downloadSrt").addEventListener("click", downloadSRT);
+  $("exportVideo").addEventListener("click", exportVideo);
+
+  $("clearSaved").addEventListener("click", () => {
+    if (!confirm("Clear all saved captions?")) return;
+    savedCaptions = [];
+    storeSaved();
+    renderSaved();
+  });
+
+  $("themeToggle").addEventListener("click", () => {
+    document.body.classList.toggle("light");
+  });
+
+  renderCaptionResults();
+  renderTemplates();
+  renderSaved();
+  renderVideoCaptionList();
+  updateFontPreview();
+  updateVideoCaption();
+}
+
+document.addEventListener("DOMContentLoaded", initializeApp);
