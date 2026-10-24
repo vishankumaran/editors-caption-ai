@@ -1,826 +1,845 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#090711">
-<title>Editor's Caption AI</title>
+<!-- VIDEO CAPTION EDITOR: PART 1 -->
 
 <style>
-:root {
-  --bg:#090711;
-  --panel:#151222;
-  --purple:#9b5cff;
-  --pink:#ff4fc8;
-  --text:#f7f2ff;
-  --muted:#aaa0bb;
-  --border:#302543;
+.video-editor {
+  background: #11101b;
+  color: #ffffff;
+  padding: 20px;
+  border-radius: 18px;
+  margin: 25px 0;
+  font-family: Arial, sans-serif;
+  border: 1px solid #393047;
 }
-*{box-sizing:border-box}
-body{
-  margin:0;background:radial-gradient(ellipse at top,#26133e,transparent 45%),var(--bg);
-  color:var(--text);font-family:system-ui,Arial,sans-serif
+
+.video-editor h2 {
+  text-align: center;
+  color: #e7a5ff;
+  margin-bottom: 8px;
 }
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-header{
-  position:sticky;top:0;z-index:10;background:#0c0915ed;
-  border-bottom:1px solid var(--border);padding:15px
+
+.video-editor .ve-subtitle {
+  text-align: center;
+  color: #c5bdd2;
+  font-size: 13px;
+  margin-bottom: 20px;
 }
-.top{max-width:1000px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.logo{font-weight:900;font-size:19px}
-.logo span{color:var(--pink)}
-.badge{border:1px solid #62418a;color:#d5b7ff;border-radius:20px;padding:5px 9px;font-size:10px}
-main{max-width:1000px;margin:auto;padding:22px 14px 100px}
-.hero{text-align:center;padding:30px 5px 24px}
-.hero h1{font-size:clamp(30px,8vw,52px);line-height:1.08;margin:10px 0}
-.gradient{
-  background:linear-gradient(90deg,var(--purple),var(--pink),#55d8ff);
-  -webkit-background-clip:text;background-clip:text;color:transparent
+
+.ve-upload {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  border: 1px dashed #c084fc;
+  border-radius: 12px;
+  background: #20192e;
+  color: white;
+  margin-bottom: 16px;
 }
-.hero p{color:var(--muted);font-size:14px;line-height:1.7;max-width:530px;margin:12px auto}
-.stats{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:20px}
-.stat{border:1px solid var(--border);background:#171222;padding:10px 13px;border-radius:12px;font-size:12px}
-.tabs{display:flex;gap:8px;overflow-x:auto;padding:5px 0 14px}
-.tabs button{
-  white-space:nowrap;padding:11px 15px;border-radius:11px;background:var(--panel);
-  color:var(--muted);border:1px solid var(--border)
+
+.ve-preview {
+  position: relative;
+  width: 100%;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.tabs button.active{background:linear-gradient(110deg,#7939d5,#c438a0);color:white}
-.panel{
-  background:linear-gradient(145deg,#171323,#100d19);
-  border:1px solid var(--border);border-radius:18px;padding:17px;margin-bottom:17px
+
+.ve-preview video {
+  display: block;
+  width: 100%;
+  max-height: 450px;
 }
-.panel h2{margin:0 0 7px;font-size:20px}
-.desc{font-size:13px;color:var(--muted);margin:0 0 17px;line-height:1.6}
-label{display:block;font-size:12px;color:#d8c9e9;margin:14px 0 8px}
-input,select,textarea{
-  width:100%;padding:13px;background:#0c0914;color:white;
-  border:1px solid #382b4d;border-radius:11px;outline:none
+
+.ve-placeholder {
+  color: #aaa;
+  padding: 35px 10px;
+  text-align: center;
 }
-textarea{resize:vertical;min-height:90px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.primary{
-  background:linear-gradient(100deg,#8647ed,#db3da9);color:white;border:0;
-  border-radius:11px;padding:13px 16px;font-weight:750;width:100%;margin-top:13px
+
+.ve-caption-overlay {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: 10%;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 900;
+  color: #ffffff;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  pointer-events: none;
+  text-shadow:
+    -2px -2px 2px #000,
+    2px -2px 2px #000,
+    -2px 2px 2px #000,
+    2px 2px 2px #000;
 }
-.secondary{background:#241a34;border:1px solid #443256;color:#eadcff;padding:9px 12px;border-radius:9px;font-size:12px}
-.chips{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
-.chip{background:#20182e;border:1px solid #3a2a4c;color:#d8c8ed;border-radius:30px;padding:8px 12px;font-size:12px}
-.chip.active{background:#58318a;border-color:#a56cff;color:white}
-.resultsHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:18px 0 12px}
-.resultsHead h3{font-size:16px;margin:0}
-.cards{display:grid;grid-template-columns:1fr;gap:10px}
-.card{background:#100d19;border:1px solid var(--border);border-radius:13px;padding:14px;min-width:0}
-.captionText{font-size:16px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
-.cardActions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.cardActions button{flex:1;min-width:75px}
-.miniTitle{color:#c8a5ff;text-transform:uppercase;font-size:10px;letter-spacing:1.3px;margin-bottom:8px}
-.fontGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.fontCard{min-width:0;padding:13px;border:1px solid var(--border);border-radius:12px;background:#100d19}
-.fontPreview{min-height:55px;overflow-wrap:anywhere;font-size:18px;line-height:1.6;margin-bottom:12px}
-.fontName{color:var(--muted);font-size:11px;margin-bottom:9px}
-.fontCard button{width:100%}
-.hidden{display:none!important}
-.empty{padding:25px 10px;text-align:center;color:var(--muted)}
-footer{text-align:center;border-top:1px solid var(--border);padding:25px 12px;color:var(--muted);font-size:12px;line-height:1.8}
-.toast{
-  position:fixed;z-index:100;bottom:25px;left:50%;transform:translateX(-50%);
-  background:#e8d7ff;color:#1a1028;padding:12px 20px;border-radius:30px;
-  box-shadow:0 5px 25px #0007;font-size:13px;font-weight:700;display:none
+
+.ve-field {
+  margin-top: 16px;
 }
-@media(min-width:650px){
-  .cards{grid-template-columns:1fr 1fr}
-  .fontGrid{grid-template-columns:repeat(3,1fr)}
-  .panel{padding:23px}
+
+.ve-field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #e4d8f3;
+  font-weight: bold;
 }
-@media(max-width:360px){
-  .row,.fontGrid{grid-template-columns:1fr}
-  .logo{font-size:16px}
+
+.ve-field input[type="text"],
+.ve-field input[type="number"],
+.ve-field select,
+.ve-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: #201c2b;
+  border: 1px solid #514362;
+  border-radius: 9px;
+  padding: 12px;
+  color: #fff;
+  font-size: 15px;
+}
+
+.ve-field textarea {
+  resize: vertical;
+  min-height: 85px;
+}
+
+.ve-field input[type="range"] {
+  width: 100%;
+  accent-color: #d18aff;
+}
+
+.ve-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ve-btn {
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 10px;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.ve-primary {
+  background: linear-gradient(100deg, #c084fc, #f0abfc);
+  color: #160d20;
+}
+
+.ve-secondary {
+  background: #30263f;
+  color: #fff;
+  border: 1px solid #69547d;
+}
+
+.ve-note {
+  color: #bdb2cc;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 14px;
+}
+
+.ve-status {
+  color: #f0abfc;
+  font-size: 13px;
+  margin-top: 12px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 400px) {
+  .ve-row {
+    grid-template-columns: 1fr;
+  }
+
+  .ve-caption-overlay {
+    font-size: 21px;
+  }
 }
 </style>
-</head>
 
-<body>
-<header>
-  <div class="top">
-    <div class="logo">EDITORS<span>✦</span>CAPTION AI</div>
-    <div class="badge">CREATOR STUDIO</div>
-  </div>
-</header>
+<section class="video-editor" id="videoCaptionEditor">
 
-<main>
-<section class="hero">
-  <div class="badge">YOUR CREATIVE WORLD</div>
-  <h1>Create Your<br><span class="gradient">Own Vibe.</span></h1>
-  <p>Generate captions, explore stylish fonts and discover creative text for reels, edits, bios and social media.</p>
-  <div class="stats">
-    <div class="stat">🔤 Stylish Fonts</div>
-    <div class="stat">🎭 Caption Library</div>
-    <div class="stat">📱 Mobile Ready</div>
-  </div>
-</section>
+  <h2>🎬 Video Caption Studio</h2>
 
-<div class="tabs">
-  <button class="active" data-tab="captions">✦ Captions</button>
-  <button data-tab="fonts">Aa Fonts</button>
-  <button data-tab="templates">🎭 Templates</button>
-  <button data-tab="favorites">♡ Favorites</button>
-</div>
+  <p class="ve-subtitle">
+    Create stylish captions for Reels, Shorts and gaming edits.
+  </p>
 
-<section class="panel" id="captionPanel">
-  <h2>Caption Studio</h2>
-  <p class="desc">Choose your mood and create captions for your next edit.</p>
+  <label class="ve-field">
+    <span style="display:block;margin-bottom:8px">
+      📁 Upload Your Video
+    </span>
 
-  <label for="topic">Caption topic</label>
-  <textarea id="topic" placeholder="Love failure, friendship, bike edit, attitude..."></textarea>
+    <input
+      class="ve-upload"
+      id="veVideoFile"
+      type="file"
+      accept="video/*"
+    >
+  </label>
 
-  <label>Choose mood</label>
-  <div class="chips" id="moods">
-    <button class="chip active" data-mood="Attitude">😎 Attitude</button>
-    <button class="chip" data-mood="Love">❤️ Love</button>
-    <button class="chip" data-mood="Sad">🥀 Sad</button>
-    <button class="chip" data-mood="Mass">🔥 Mass</button>
-    <button class="chip" data-mood="Friendship">🫂 Friendship</button>
-    <button class="chip" data-mood="Motivation">👑 Motivation</button>
-    <button class="chip" data-mood="Funny">😂 Funny</button>
-    <button class="chip" data-mood="Life">🌍 Life</button>
-    <button class="chip" data-mood="Gaming">🎮 Gaming</button>
-    <button class="chip" data-mood="Cinematic">🎬 Cinematic</button>
-  </div>
+  <div class="ve-preview" id="vePreview">
 
-  <div class="row">
-    <div>
-      <label for="language">Language</label>
-      <select id="language">
-        <option value="Thunglish">Thunglish</option>
-        <option value="Tamil">Tamil</option>
-        <option value="English">English</option>
-        <option value="Hindi">Hindi</option>
-        <option value="Malayalam">Malayalam</option>
-        <option value="Telugu">Telugu</option>
-        <option value="Kannada">Kannada</option>
-        <option value="Bengali">Bengali</option>
-        <option value="French">French</option>
-        <option value="Spanish">Spanish</option>
-        <option value="Japanese">Japanese</option>
-        <option value="Korean">Korean</option>
-      </select>
+    <div class="ve-placeholder" id="vePlaceholder">
+      Your video preview will appear here.
     </div>
-    <div>
-      <label for="quantity">Number of captions</label>
-      <select id="quantity">
-        <option>5</option>
-        <option>10</option>
-        <option>15</option>
-      </select>
+
+    <video
+      id="veVideo"
+      controls
+      playsinline
+      style="display:none"
+    ></video>
+
+    <div
+      class="ve-caption-overlay"
+      id="veCaptionOverlay"
+      style="display:none"
+    ></div>
+
+  </div>
+
+  <div class="ve-field">
+    <label for="veCaptionText">✍️ Caption Text</label>
+
+    <textarea
+      id="veCaptionText"
+      placeholder="Type your Tamil, Thunglish or English caption..."
+    ></textarea>
+  </div>
+
+  <div class="ve-field">
+    <label for="veCaptionLanguage">🌐 Caption Language</label>
+
+    <select id="veCaptionLanguage">
+      <option value="Thunglish">Thunglish</option>
+      <option value="Tamil">Tamil</option>
+      <option value="English">English</option>
+      <option value="Hindi">Hindi</option>
+      <option value="Malayalam">Malayalam</option>
+      <option value="Telugu">Telugu</option>
+      <option value="Kannada">Kannada</option>
+    </select>
+  </div>
+
+  <div class="ve-field">
+    <label for="veFont">🔤 Font Style</label>
+
+    <select id="veFont">
+      <option value="Arial, sans-serif">Modern Bold</option>
+      <option value="Impact, sans-serif">Mass / Impact</option>
+      <option value="Georgia, serif">Elegant Serif</option>
+      <option value="'Trebuchet MS', sans-serif">Clean Stylish</option>
+      <option value="'Courier New', monospace">Typewriter</option>
+      <option value="Verdana, sans-serif">Gaming Bold</option>
+    </select>
+  </div>
+
+  <div class="ve-row">
+
+    <div class="ve-field">
+      <label for="veTextColor">🎨 Text Colour</label>
+      <input
+        id="veTextColor"
+        type="color"
+        value="#ffffff"
+        style="width:100%;height:45px"
+      >
     </div>
+
+    <div class="ve-field">
+      <label for="veOutlineColor">Text Outline</label>
+      <input
+        id="veOutlineColor"
+        type="color"
+        value="#000000"
+        style="width:100%;height:45px"
+      >
+    </div>
+
   </div>
 
-  <button class="primary" id="generateBtn">✦ Generate Captions</button>
-  <div class="resultsHead">
-    <h3>Your Captions</h3>
-    <button class="secondary" id="copyAll">Copy All</button>
+  <div class="ve-field">
+    <label for="veFontSize">
+      Caption Size: <span id="veFontSizeValue">26</span> px
+    </label>
+
+    <input
+      id="veFontSize"
+      type="range"
+      min="14"
+      max="60"
+      value="26"
+    >
   </div>
-  <div class="cards" id="captionResults">
-    <div class="empty">Your captions will appear here.</div>
+
+  <div class="ve-field">
+    <label for="vePosition">📍 Caption Position</label>
+
+    <select id="vePosition">
+      <option value="top">Top</option>
+      <option value="middle">Centre</option>
+      <option value="bottom" selected>Bottom</option>
+    </select>
   </div>
+
+  <div class="ve-field">
+    <label for="veStart">⏱️ Caption Start Time (seconds)</label>
+
+    <input
+      id="veStart"
+      type="number"
+      min="0"
+      step="0.1"
+      value="0"
+    >
+  </div>
+
+  <div class="ve-field">
+    <label for="veEnd">⏱️ Caption End Time (seconds)</label>
+
+    <input
+      id="veEnd"
+      type="number"
+      min="0"
+      step="0.1"
+      value="5"
+    >
+  </div>
+
+  <button
+    type="button"
+    class="ve-btn ve-primary"
+    id="veAddCaption"
+  >
+    ✨ Add / Update Caption
+  </button>
+
+  <button
+    type="button"
+    class="ve-btn ve-secondary"
+    id="veClearCaption"
+  >
+    🗑️ Clear Caption
+  </button>
+
+  <button
+    type="button"
+    class="ve-btn ve-secondary"
+    id="veExportButton"
+  >
+    📥 Export Video
+  </button>
+
+  <p class="ve-status" id="veStatus">
+    Upload a video to get started.
+  </p>
+
+  <p class="ve-note">
+    Your video is previewed in your browser. The next code part
+    adds the editor controls. Video export depends on browser
+    capabilities. Automatic speech recognition will require an
+    additional implementation.
+  </p>
+
 </section>
 
-<section class="panel hidden" id="fontPanel">
-  <h2>Font Playground</h2>
-  <p class="desc">Create stylish text for names, bios and edits.</p>
-  <label for="fontInput">Enter text</label>
-  <input id="fontInput" value="VISHAN EDITZ" maxlength="300">
-  <label for="fontSearch">Search styles</label>
-  <input id="fontSearch" placeholder="Search bold, gothic, bubble...">
-  <div class="resultsHead">
-    <h3>Font Styles</h3>
-    <span class="badge" id="fontCount">0 styles</span>
-  </div>
-  <div class="fontGrid" id="fontResults"></div>
-</section>
+<!-- END VIDEO CAPTION EDITOR PART 1 --><!-- VIDEO CAPTION EDITOR: PART 2 -->
 
-<section class="panel hidden" id="templatePanel">
-  <h2>Caption Templates</h2>
-  <p class="desc">Browse ready-to-use captions and copy your favourites.</p>
-  <input id="templateSearch" placeholder="🔍 Search captions or categories...">
-  <div class="chips" id="templateCategories"></div>
-  <div class="resultsHead">
-    <h3>Explore Templates</h3>
-    <span class="badge" id="templateCount">0</span>
-  </div>
-  <div class="cards" id="templateResults"></div>
-</section>
+<script>
+(function () {
+  "use strict";
 
-<section class="panel hidden" id="favoritePanel">
-  <h2>Your Favorites ♡</h2>
-  <p class="desc">Your saved captions stay in this browser.</p>
-  <div class="cards" id="favoriteResults"></div>
-</section>
-</main>
+  const $ = id => document.getElementById(id);
 
-<footer>
-  <strong>EDITORS✦CAPTION AI</strong><br>
-  Made for creative minds and video editors.<br>
-  Your vibe. Your words. Your style.
-</footer>
+  const video = $("veVideo");
+  const fileInput = $("veVideoFile");
+  const placeholder = $("vePlaceholder");
+  const overlay = $("veCaptionOverlay");
+  const captionInput = $("veCaptionText");
+  const status = $("veStatus");
 
-<div class="toast" id="toast"></div>
-
-<!-- PART 2 STARTS HERE --><script>
-const $ = id => document.getElementById(id);
-
-let currentMood = "Attitude";
-let currentTab = "captions";
-let currentCaptions = [];
-let activeCategory = "All";
-
-function safeGet(key, fallback) {
-  try {
-    const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : fallback;
-  } catch {
-    return fallback;
+  if (!video || !fileInput || !overlay || !captionInput) {
+    return;
   }
-}
 
-let favorites = safeGet("eca_favorites", []);
+  let videoURL = null;
+  let captions = [];
+  let captionCounter = 0;
 
-function notify(message) {
-  const toast = $("toast");
-  toast.textContent = message;
-  toast.style.display = "block";
-  clearTimeout(window.toastTimer);
-  window.toastTimer = setTimeout(() => {
-    toast.style.display = "none";
-  }, 2200);
-}
+  function setStatus(message) {
+    status.textContent = message;
+  }
 
-async function copyText(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-    notify("Copied successfully!");
-  } catch {
-    const area = document.createElement("textarea");
-    area.value = text;
-    area.style.position = "fixed";
-    document.body.appendChild(area);
-    area.select();
+  function getSettings() {
+    return {
+      text: captionInput.value.trim(),
+      start: Number($("veStart").value),
+      end: Number($("veEnd").value),
+      color: $("veTextColor").value,
+      outline: $("veOutlineColor").value,
+      size: Number($("veFontSize").value),
+      font: $("veFont").value,
+      position: $("vePosition").value
+    };
+  }
+
+  function applyStyle(settings) {
+    overlay.style.color = settings.color;
+    overlay.style.fontSize = settings.size + "px";
+    overlay.style.fontFamily = settings.font;
+
+    const shadow = settings.outline;
+    overlay.style.textShadow = [
+      "-2px -2px 0 " + shadow,
+      "2px -2px 0 " + shadow,
+      "-2px 2px 0 " + shadow,
+      "2px 2px 0 " + shadow,
+      "0 3px 5px #000"
+    ].join(",");
+
+    overlay.style.top = "";
+    overlay.style.bottom = "";
+    overlay.style.transform = "";
+
+    if (settings.position === "top") {
+      overlay.style.top = "8%";
+      overlay.style.bottom = "auto";
+    } else if (settings.position === "middle") {
+      overlay.style.top = "50%";
+      overlay.style.bottom = "auto";
+      overlay.style.transform = "translateY(-50%)";
+    } else {
+      overlay.style.bottom = "10%";
+      overlay.style.top = "auto";
+    }
+  }
+
+  function renderCaption() {
+    const current = video.currentTime || 0;
+
+    const active = captions.find(c =>
+      current >= c.start && current <= c.end
+    );
+
+    if (!active) {
+      overlay.style.display = "none";
+      return;
+    }
+
+    overlay.textContent = active.text;
+    applyStyle(active);
+    overlay.style.display = "block";
+  }
+
+  fileInput.addEventListener("change", function () {
+    const file = fileInput.files && fileInput.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("video/")) {
+      setStatus("Please select a valid video file.");
+      return;
+    }
+
+    if (videoURL) {
+      URL.revokeObjectURL(videoURL);
+    }
+
+    videoURL = URL.createObjectURL(file);
+    video.src = videoURL;
+    video.style.display = "block";
+    placeholder.style.display = "none";
+
+    captions = [];
+    overlay.style.display = "none";
+
+    video.onloadedmetadata = function () {
+      $("veStart").value = "0";
+      $("veEnd").value = Math.min(5, video.duration).toFixed(1);
+
+      setStatus(
+        "Video loaded! Duration: " +
+        video.duration.toFixed(2) +
+        " seconds. Add your caption."
+      );
+    };
+
+    video.onerror = function () {
+      setStatus(
+        "The video could not be loaded. Try another supported video format."
+      );
+    };
+
+    video.load();
+  });
+
+  $("veFontSize").addEventListener("input", function () {
+    $("veFontSizeValue").textContent = this.value;
+
+    const settings = getSettings();
+    const active = captions.find(c =>
+      video.currentTime >= c.start &&
+      video.currentTime <= c.end
+    );
+
+    if (active) {
+      Object.assign(active, settings);
+      renderCaption();
+    }
+  });
+
+  [
+    "veTextColor",
+    "veOutlineColor",
+    "veFont",
+    "vePosition"
+  ].forEach(id => {
+    $(id).addEventListener("input", function () {
+      const settings = getSettings();
+
+      const active = captions.find(c =>
+        video.currentTime >= c.start &&
+        video.currentTime <= c.end
+      );
+
+      if (active) {
+        Object.assign(active, settings);
+        renderCaption();
+      }
+    });
+  });
+
+  $("veAddCaption").addEventListener("click", function () {
+    if (!video.src || video.readyState < 1) {
+      setStatus("Upload a video first.");
+      return;
+    }
+
+    const settings = getSettings();
+
+    if (!settings.text) {
+      setStatus("Please type a caption first.");
+      return;
+    }
+
+    if (
+      !Number.isFinite(settings.start) ||
+      !Number.isFinite(settings.end) ||
+      settings.start < 0 ||
+      settings.end <= settings.start ||
+      settings.end > video.duration
+    ) {
+      setStatus(
+        "Check your start and end times. They must be within the video duration."
+      );
+      return;
+    }
+
+    const caption = {
+      ...settings,
+      id: ++captionCounter
+    };
+
+    captions.push(caption);
+    captions.sort((a, b) => a.start - b.start);
+
+    video.currentTime = caption.start;
+    renderCaption();
+
+    setStatus(
+      "Caption added! " + captions.length +
+      " caption(s) in your timeline."
+    );
+  });
+
+  $("veClearCaption").addEventListener("click", function () {
+    captions = [];
+    overlay.style.display = "none";
+    setStatus("All captions cleared.");
+  });
+
+  video.addEventListener("timeupdate", renderCaption);
+  video.addEventListener("seeked", renderCaption);
+  video.addEventListener("loadeddata", renderCaption);
+
+  /*
+   * Export a WebM video with captions burned into its frames,
+   * when the browser supports canvas capture and MediaRecorder.
+   * This is a real-time recording, not a fast offline render.
+   */
+  $("veExportButton").addEventListener("click", async function () {
+    if (!video.src || video.readyState < 2) {
+      setStatus("Upload a video first.");
+      return;
+    }
+
+    if (!captions.length) {
+      setStatus("Add at least one caption before exporting.");
+      return;
+    }
+
+    if (!window.MediaRecorder ||
+        !HTMLCanvasElement.prototype.captureStream) {
+      setStatus(
+        "Video export isn't supported by this browser. Try a compatible desktop browser."
+      );
+      return;
+    }
+
+    const button = $("veExportButton");
+    button.disabled = true;
+
+    let canvasStream;
+    let combinedStream;
+    let recorder;
+    let animationFrame;
+    let videoTrack;
+    let audioContext;
+    let audioSource;
+    let audioDestination;
+
     try {
-      document.execCommand("copy");
-      notify("Copied successfully!");
-    } catch {
-      notify("Please select and copy manually.");
-    }
-    area.remove();
-  }
-}
+      const canvas = document.createElement("canvas");
 
-/* NAVIGATION */
-document.querySelectorAll("[data-tab]").forEach(button => {
-  button.addEventListener("click", () => {
-    currentTab = button.dataset.tab;
+      canvas.width = video.videoWidth || 720;
+      canvas.height = video.videoHeight || 1280;
 
-    document.querySelectorAll("[data-tab]").forEach(item =>
-      item.classList.toggle("active", item === button)
-    );
+      const ctx = canvas.getContext("2d");
 
-    $("captionPanel").classList.toggle("hidden", currentTab !== "captions");
-    $("fontPanel").classList.toggle("hidden", currentTab !== "fonts");
-    $("templatePanel").classList.toggle("hidden", currentTab !== "templates");
-    $("favoritePanel").classList.toggle("hidden", currentTab !== "favorites");
+      canvasStream = canvas.captureStream(30);
 
-    if (currentTab === "favorites") renderFavorites();
-    if (currentTab === "fonts") renderFonts();
-    if (currentTab === "templates") renderTemplates();
+      const tracks = [...canvasStream.getVideoTracks()];
 
-    window.scrollTo({top:0,behavior:"smooth"});
-  });
-});
+      /*
+       * Audio capture may be blocked by browser permissions or
+       * unsupported on the selected device.
+       */
+      try {
+        const AudioContextClass =
+          window.AudioContext || window.webkitAudioContext;
 
-/* MOODS */
-document.querySelectorAll("[data-mood]").forEach(button => {
-  button.addEventListener("click", () => {
-    currentMood = button.dataset.mood;
-    document.querySelectorAll("[data-mood]").forEach(item =>
-      item.classList.toggle("active", item === button)
-    );
-  });
-});
+        if (AudioContextClass) {
+          audioContext = new AudioContextClass();
+          audioDestination = audioContext.createMediaStreamDestination();
+          audioSource = audioContext.createMediaElementSource(video);
 
-/* CAPTION DATABASE */
-const database = {
-Attitude:[
-"En route thani, en rules thani.",
-"Naan maarala, en mindset upgrade aachu.",
-"Silent ah iruppen, aana weak illa.",
-"En value enakku theriyum.",
-"Less talk, more action.",
-"En game la naan dhaan player one.",
-"Yaar opinion um en identity illa.",
-"Calm ah irukken, clear ah irukken.",
-"En vazhi, en style.",
-"Respect kudutha respect thirumbi varum.",
-"Competition en kooda illa, en yesterday kooda.",
-"En silence ah weakness nu nenachidadha.",
-"Original ah irukkuradhu dhaan en style.",
-"En energy ellarukkum puriyanum nu avasiyam illa.",
-"Simple life, strong mindset."
-],
-Love:[
-"Unna paatha podhum, en mood maaridum.",
-"Sila per memories illa, namma world eh.",
-"Un smile ku thaniya oru vibe irukku.",
-"Un kooda irukkura moments special.",
-"Words kammi, feelings adhigam.",
-"En favourite notification nee dhaan.",
-"Un presence eh oru peaceful feeling.",
-"Chinna moments, periya memories.",
-"Unna ninaicha automatic ah smile varum.",
-"Distance irundhaalum care koraiyaadhu.",
-"Un sirippula oru azhagana magic irukku.",
-"Un kooda pesina time oduradhe theriyadhu.",
-"Simple ah vandha, special ah aayitta.",
-"Some feelings need no explanation.",
-"Un memories en playlist la irukku."
-],
-Sad:[
-"Sila feelings words la solla mudiyadhu.",
-"Sirippukku pinnadiyum stories irukkum.",
-"Ellam okay nu sonna ellam okay nu artham illa.",
-"Sila memories innum silent ah pesudhu.",
-"Time move aagudhu, thoughts mattum stay aagudhu.",
-"Marakka try pannalum memories varudhu.",
-"Silence kooda sila neram heavy ah irukkum.",
-"Life teach pannina lessons easy ah marakka mudiyadhu.",
-"Some chapters end without answers.",
-"Smile irukku, aana thoughts vera level.",
-"Ellathukkum oru reason irukkum.",
-"Old memories, new lessons.",
-"Konjam distance, neraya thoughts.",
-"Peace thedi pora journey.",
-"One day ellam puriyum."
-],
-Mass:[
-"Entry simple, impact heavy.",
-"Pesuratha vida seyal la kaattu.",
-"En game, en rules.",
-"Style en choice, confidence en strength.",
-"Vibe vera, route vera.",
-"Scene create panna thevai illa, presence podhum.",
-"Silent entry, memorable impact.",
-"Level ah vida consistency mukkiyam.",
-"En pace la naan poren.",
-"Focus strong, goals clear.",
-"Built by effort, powered by confidence.",
-"Look simple, mindset powerful.",
-"Mass na noise illa, presence.",
-"Every frame has a story.",
-"Own the moment."
-],
-Friendship:[
-"Friends illa, chosen family.",
-"Serndhu siricha memories always special.",
-"Distance change aagalam, friendship illa.",
-"Random moments, lifetime memories.",
-"Un kooda irundha boring day kooda fun.",
-"Friends kooda irukkura vibe vera level.",
-"Problems varalam, team spirit pogadhu.",
-"One gang, countless stories.",
-"Friendship ku daily reason thevai illa.",
-"Real friends, real memories.",
-"Sirippu share pannina friendship strong aagum.",
-"Small gang, big memories.",
-"Different minds, same vibe.",
-"Friendship is our favourite chapter.",
-"Together, every ordinary day feels special."
-],
-Motivation:[
-"Daily konjam improve aana podhum.",
-"Dream perusa vechuko, effort daily kudu.",
-"Slow progress um progress dhaan.",
-"Un journey ah un pace la continue pannu.",
-"Consistency dhaan secret.",
-"Failure oru lesson, final destination illa.",
-"Focus on growth, not comparison.",
-"Small steps create big changes.",
-"Un future ku inniku effort kudu.",
-"Start small, stay consistent.",
-"Discipline makes the difference.",
-"Un goals ku nee dhaan first support.",
-"Progress over perfection.",
-"Every day is another chance to learn.",
-"Believe in the work you put in."
-],
-Funny:[
-"En life la naan dhaan guest appearance.",
-"Plan vera, nadakkuradhu vera.",
-"Battery 2%, confidence 100%.",
-"En sleep schedule ku rules kedaiyaadhu.",
-"Budget small, dreams international.",
-"Serious ah irukka try panren, mudiyala.",
-"Loading... please wait.",
-"En brain ku sometimes network illa.",
-"Food vandha dhaan full focus.",
-"Monday ah paatha motivation logout aagudhu.",
-"En luck ku separate fan club venum.",
-"Work later, snack now.",
-"Expectation HD, reality low network.",
-"Busy nu sonnen, actually sleepy.",
-"Life update: still figuring it out."
-],
-Life:[
-"Life ah compare pannama experience pannu.",
-"Every phase teaches something.",
-"Peace is also an achievement.",
-"Konjam patience, konjam courage.",
-"Life perfect illa, aana meaningful ah irukkalam.",
-"Un story innum continue aagudhu.",
-"Change is part of growing.",
-"Simple moments often mean the most.",
-"Learn, grow, move forward.",
-"Ellam ore naal la nadakkanum nu illa.",
-"Own your journey.",
-"Every season has a lesson.",
-"Un happiness ku time kudu.",
-"Little progress is worth celebrating.",
-"Choose peace when you can."
-],
-Gaming:[
-"Lobby la calm, match la focus.",
-"Game sense is the real flex.",
-"One squad, one mission.",
-"Practice makes gameplay smoother.",
-"Clutch moment loading.",
-"Rank up, never give up.",
-"Headphones on, distractions off.",
-"Every match teaches a lesson.",
-"Teamwork changes the game.",
-"Victory starts with focus.",
-"Game face activated.",
-"Play smart, stay calm.",
-"GG to every good player.",
-"One more match, one more memory.",
-"Skills grow with practice."
-],
-Cinematic:[
-"Every frame tells a story.",
-"Light, shadow, emotion.",
-"Some moments deserve slow motion.",
-"Visuals speak beyond words.",
-"One scene, a thousand feelings.",
-"Made of moments and memories.",
-"Let the frame do the talking.",
-"Cinema in every second.",
-"Colour grade, mood set.",
-"Every cut has a purpose.",
-"Stories live between the frames.",
-"Create beyond the ordinary.",
-"Motion meets emotion.",
-"An ordinary moment, cinematic soul.",
-"Frames fade, feelings stay."
-]
-};
+          audioSource.connect(audioDestination);
+          audioSource.connect(audioContext.destination);
 
-/* BASIC LANGUAGE SUPPORT */
-const tamilDictionary = {
-"en":"என்","naan":"நான்","nee":"நீ","neenga":"நீங்கள்",
-"un":"உன்","unna":"உன்னை","romba":"ரொம்ப","pudikkum":"பிடிக்கும்",
-"love":"காதல்","life":"வாழ்க்கை","friend":"நண்பன்",
-"friends":"நண்பர்கள்","friendship":"நட்பு","manasu":"மனசு",
-"vibe":"வைப்","happy":"மகிழ்ச்சி","sirippu":"சிரிப்பு",
-"smile":"புன்னகை","feelings":"உணர்வுகள்","memories":"நினைவுகள்",
-"silent":"அமைதி","style":"ஸ்டைல்","strong":"வலிமையான",
-"dream":"கனவு","focus":"கவனம்","effort":"முயற்சி",
-"peace":"அமைதி","story":"கதை"
-};
+          audioDestination.stream.getAudioTracks().forEach(track => {
+            tracks.push(track);
+          });
 
-function translateTamil(text) {
-  return text.replace(/[A-Za-z]+/g, word =>
-    tamilDictionary[word.toLowerCase()] || word
-  );
-}
+          await audioContext.resume();
+        }
+      } catch (audioError) {
+        console.warn("Audio capture unavailable:", audioError);
+      }
 
-function englishCaption(mood,index,topic) {
-  const lines={
-    Attitude:["My path, my rules.","Quiet confidence speaks loudly.","Originality is my signature.","I compete with yesterday's me.","My energy, my boundaries."],
-    Love:["Some people make ordinary moments unforgettable.","Your smile changes the mood.","The little moments mean the most.","Some feelings need no explanation.","You make simple moments special."],
-    Sad:["Some feelings are difficult to put into words.","Not every smile tells the whole story.","Some memories stay longer than expected.","Healing takes its own time.","Every chapter teaches something."],
-    Mass:["Simple entrance, unforgettable impact.","Let your actions do the talking.","Confidence changes the whole frame.","Focused mind, fearless goals.","Own the moment."],
-    Friendship:["Friends by chance, family by choice.","Ordinary days become great memories.","Different minds, one vibe.","The best memories are shared.","Real friendship makes life brighter."],
-    Motivation:["Small steps create meaningful progress.","Consistency turns effort into growth.","Focus on progress, not comparison.","Your journey deserves patience.","Keep learning and moving."],
-    Funny:["My plans and reality have different schedules.","Confidence at one hundred percent, battery at two.","Loading my life update...","Professional at postponing things.","Expectation: cinematic. Reality: comedy."],
-    Life:["Every season has something to teach.","Choose progress over perfection.","Peace is a powerful achievement.","Your journey is your own.","Little moments make a meaningful life."],
-    Gaming:["Focus on the game, learn from every round.","Smart plays beat loud talk.","Every match is another lesson.","Squad goals, shared victories.","Practice today, progress tomorrow."],
-    Cinematic:["Every frame tells a story.","Where light meets emotion.","Some moments deserve slow motion.","Let the visuals speak.","Motion meets emotion."]
-  };
-  let text=(lines[mood]||lines.Attitude)[index%5];
-  return topic ? text+" — "+topic : text;
-}
+      combinedStream = new MediaStream(tracks);
 
-function getCaptions(mood,topic,language,count) {
-  const source=database[mood]||database.Attitude;
-  return Array.from({length:count},(_,i)=>{
-    let caption=source[i%source.length];
-    if(language==="English") return englishCaption(mood,i,topic.trim());
-    if(topic.trim()) caption += " ✦ "+topic.trim();
-    if(language==="Tamil") caption=translateTamil(caption);
-    if(!["Tamil","Thunglish"].includes(language))
-      caption="["+language+"] "+caption;
-    return caption;
-  });
-}
+      const mimeTypes = [
+        "video/webm;codecs=vp9,opus",
+        "video/webm;codecs=vp8,opus",
+        "video/webm"
+      ];
 
-function renderCaptionCards(items,container,showFavorite=true) {
-  container.innerHTML="";
-  if(!items.length){
-    container.innerHTML='<div class="empty">No captions found.</div>';
-    return;
-  }
+      const mimeType = mimeTypes.find(type =>
+        MediaRecorder.isTypeSupported(type)
+      );
 
-  items.forEach((text,index)=>{
-    const card=document.createElement("article");
-    card.className="card";
+      recorder = new MediaRecorder(
+        combinedStream,
+        mimeType ? { mimeType } : undefined
+      );
 
-    const title=document.createElement("div");
-    title.className="miniTitle";
-    title.textContent=currentMood+" • "+(index+1);
+      const chunks = [];
 
-    const content=document.createElement("div");
-    content.className="captionText";
-    content.textContent=text;
-
-    const actions=document.createElement("div");
-    actions.className="cardActions";
-
-    const copy=document.createElement("button");
-    copy.className="secondary";
-    copy.textContent="📋 Copy";
-    copy.onclick=()=>copyText(text);
-    actions.appendChild(copy);
-
-    if(showFavorite){
-      const fav=document.createElement("button");
-      fav.className="secondary";
-      fav.textContent=favorites.includes(text)?"♥ Saved":"♡ Save";
-
-      fav.onclick=()=>{
-        favorites=favorites.includes(text)
-          ?favorites.filter(x=>x!==text)
-          :[text,...favorites];
-        saveFavorites();
-        fav.textContent=favorites.includes(text)?"♥ Saved":"♡ Save";
-        if(currentTab==="favorites")renderFavorites();
+      recorder.ondataavailable = function (event) {
+        if (event.data && event.data.size) {
+          chunks.push(event.data);
+        }
       };
-      actions.appendChild(fav);
+
+      const recordingFinished = new Promise((resolve, reject) => {
+        recorder.onstop = resolve;
+        recorder.onerror = event => reject(event.error);
+      });
+
+      function drawFrame() {
+        if (video.readyState >= 2) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+          const current = video.currentTime;
+          const active = captions.find(c =>
+            current >= c.start && current <= c.end
+          );
+
+          if (active) {
+            const scale = canvas.width / 720;
+            const fontSize = active.size * scale;
+
+            ctx.save();
+            ctx.font = "900 " + fontSize + "px " + active.font;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+
+            const maxWidth = canvas.width * 0.92;
+            const words = active.text.split(/\s+/);
+            const lines = [];
+            let line = "";
+
+            words.forEach(word => {
+              const test = line ? line + " " + word : word;
+
+              if (ctx.measureText(test).width > maxWidth && line) {
+                lines.push(line);
+                line = word;
+              } else {
+                line = test;
+              }
+            });
+
+            if (line) lines.push(line);
+
+            const lineHeight = fontSize * 1.2;
+            const totalHeight = lines.length * lineHeight;
+
+            let y;
+
+            if (active.position === "top") {
+              y = canvas.height * 0.1 + totalHeight / 2;
+            } else if (active.position === "middle") {
+              y = canvas.height / 2;
+            } else {
+              y = canvas.height * 0.88 - totalHeight / 2;
+            }
+
+            ctx.lineWidth = Math.max(2, fontSize * 0.1);
+            ctx.lineJoin = "round";
+            ctx.strokeStyle = active.outline;
+            ctx.fillStyle = active.color;
+
+            lines.forEach((text, index) => {
+              const lineY =
+                y - totalHeight / 2 +
+                index * lineHeight +
+                lineHeight / 2;
+
+              ctx.strokeText(text, canvas.width / 2, lineY, maxWidth);
+              ctx.fillText(text, canvas.width / 2, lineY, maxWidth);
+            });
+
+            ctx.restore();
+          }
+        }
+
+        if (!video.ended && !video.paused) {
+          animationFrame = requestAnimationFrame(drawFrame);
+        }
+      }
+
+      video.pause();
+      video.currentTime = 0;
+
+      await new Promise(resolve => {
+        if (video.readyState >= 2) resolve();
+        else video.addEventListener("loadeddata", resolve, { once: true });
+      });
+
+      await video.play();
+
+      drawFrame();
+      recorder.start(250);
+
+      setStatus(
+        "Recording export in real time. Keep this page open until it finishes."
+      );
+
+      await new Promise(resolve => {
+        video.addEventListener("ended", resolve, { once: true });
+      });
+
+      cancelAnimationFrame(animationFrame);
+
+      if (recorder.state !== "inactive") {
+        recorder.stop();
+      }
+
+      await recordingFinished;
+
+      const blob = new Blob(chunks, {
+        type: recorder.mimeType || "video/webm"
+      });
+
+      if (!blob.size) {
+        throw new Error("The exported video is empty.");
+      }
+
+      const downloadURL = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = downloadURL;
+      link.download = "editors-caption-video.webm";
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(() => URL.revokeObjectURL(downloadURL), 60000);
+
+      setStatus(
+        "Export complete! Downloaded a WebM video with embedded captions. Check your Downloads folder."
+      );
+
+    } catch (error) {
+      console.error(error);
+
+      setStatus(
+        "Export failed. Your browser may not support this recording method, or video playback may have been interrupted. Try another browser."
+      );
+
+    } finally {
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+
+      if (recorder && recorder.state !== "inactive") {
+        recorder.stop();
+      }
+
+      if (audioContext) {
+        try {
+          await audioContext.close();
+        } catch (e) {}
+      }
+
+      if (canvasStream) {
+        canvasStream.getTracks().forEach(track => track.stop());
+      }
+
+      if (combinedStream) {
+        combinedStream.getTracks().forEach(track => track.stop());
+      }
+
+      button.disabled = false;
     }
-
-    card.append(title,content,actions);
-    container.appendChild(card);
-  });
-}
-
-$("generateBtn").onclick=()=>{
-  currentCaptions=getCaptions(
-    currentMood,$("topic").value,$("language").value,
-    Number($("quantity").value)
-  );
-  renderCaptionCards(currentCaptions,$("captionResults"));
-};
-
-$("copyAll").onclick=()=>{
-  currentCaptions.length
-    ?copyText(currentCaptions.join("\n\n"))
-    :notify("Generate captions first");
-};
-
-function saveFavorites(){
-  try{
-    localStorage.setItem("eca_favorites",JSON.stringify(favorites));
-  }catch{
-    notify("Unable to save favorites.");
-  }
-}
-
-function renderFavorites(){
-  renderCaptionCards(favorites,$("favoriteResults"),true);
-}
-
-/* TEMPLATE LIBRARY */
-const categoryList=Object.keys(database);
-const templates=[];
-
-categoryList.forEach(category=>{
-  database[category].forEach((caption,index)=>{
-    templates.push({category,caption,id:category+"-"+index});
-  });
-});
-
-function buildCategoryButtons(){
-  const container=$("templateCategories");
-  container.innerHTML="";
-
-  ["All",...categoryList].forEach(category=>{
-    const button=document.createElement("button");
-    button.className="chip"+(activeCategory===category?" active":"");
-    button.textContent=category;
-    button.onclick=()=>{
-      activeCategory=category;
-      buildCategoryButtons();
-      renderTemplates();
-    };
-    container.appendChild(button);
-  });
-}
-
-function renderTemplates(){
-  const query=$("templateSearch").value.toLowerCase();
-  const filtered=templates.filter(item=>{
-    const categoryMatch=activeCategory==="All"||item.category===activeCategory;
-    const queryMatch=item.caption.toLowerCase().includes(query)||
-      item.category.toLowerCase().includes(query);
-    return categoryMatch&&queryMatch;
   });
 
-  $("templateCount").textContent=filtered.length+" templates";
-  const container=$("templateResults");
-  container.innerHTML="";
+  setStatus("Video Caption Studio is ready. Upload a video to begin.");
 
-  if(!filtered.length){
-    container.innerHTML='<div class="empty">No templates found.</div>';
-    return;
-  }
-
-  filtered.forEach(item=>{
-    const card=document.createElement("article");
-    card.className="card";
-
-    const title=document.createElement("div");
-    title.className="miniTitle";
-    title.textContent=item.category;
-
-    const content=document.createElement("div");
-    content.className="captionText";
-    content.textContent=item.caption;
-
-    const actions=document.createElement("div");
-    actions.className="cardActions";
-
-    const copy=document.createElement("button");
-    copy.className="secondary";
-    copy.textContent="📋 Copy";
-    copy.onclick=()=>copyText(item.caption);
-
-    const fav=document.createElement("button");
-    fav.className="secondary";
-    fav.textContent=favorites.includes(item.caption)?"♥ Saved":"♡ Save";
-    fav.onclick=()=>{
-      favorites=favorites.includes(item.caption)
-        ?favorites.filter(x=>x!==item.caption)
-        :[item.caption,...favorites];
-      saveFavorites();
-      renderTemplates();
-    };
-
-    actions.append(copy,fav);
-    card.append(title,content,actions);
-    container.appendChild(card);
-  });
-}
-
-$("templateSearch").addEventListener("input",renderTemplates);
-
-/* FONT GENERATOR */
-function makeMap(start){
-  const map={};
-
-  for(let i=0;i<26;i++){
-    map[String.fromCharCode(65+i)]=String.fromCodePoint(start+i);
-    map[String.fromCharCode(97+i)]=String.fromCodePoint(start+26+i);
-  }
-
-  return map;
-}
-
-const fontMaps=[
-  {name:"Bold",map:makeMap(0x1D400)},
-  {name:"Italic",map:makeMap(0x1D434)},
-  {name:"Bold Italic",map:makeMap(0x1D468)},
-  {name:"Script",map:makeMap(0x1D4D0)},
-  {name:"Fraktur",map:makeMap(0x1D504)},
-  {name:"Bold Fraktur",map:makeMap(0x1D56C)},
-  {name:"Double Struck",map:makeMap(0x1D538)},
-  {name:"Sans Serif",map:makeMap(0x1D5A0)},
-  {name:"Sans Bold",map:makeMap(0x1D5D4)},
-  {name:"Sans Italic",map:makeMap(0x1D608)},
-  {name:"Sans Bold Italic",map:makeMap(0x1D63C)},
-  {name:"Monospace",map:makeMap(0x1D670)}
-];
-
-function transformText(text,map){
-  return Array.from(text).map(char=>map[char]||char).join("");
-}
-
-function smallCaps(text){
-  const map={
-    a:"ᴀ",b:"ʙ",c:"ᴄ",d:"ᴅ",e:"ᴇ",f:"ꜰ",g:"ɢ",h:"ʜ",
-    i:"ɪ",j:"ᴊ",k:"ᴋ",l:"ʟ",m:"ᴍ",n:"ɴ",o:"ᴏ",p:"ᴘ",
-    q:"ǫ",r:"ʀ",s:"s",t:"ᴛ",u:"ᴜ",v:"ᴠ",w:"ᴡ",x:"x",
-    y:"ʏ",z:"ᴢ"
-  };
-  return text.split("").map(c=>map[c.toLowerCase()]||c).join("");
-}
-
-function bubble(text){
-  const normal="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  const styled=Array.from("ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ");
-  const map={};
-  Array.from(normal).forEach((c,i)=>map[c]=styled[i]);
-  return Array.from(text).map(c=>map[c]||c).join("");
-}
-
-function spaced(text){return Array.from(text).join(" ");}
-function reverseText(text){return Array.from(text).reverse().join("");}
-function strikeText(text){return Array.from(text).map(c=>c+"\u0336").join("");}
-function underlineText(text){return Array.from(text).map(c=>c+"\u0332").join("");}
-function glitchText(text){return Array.from(text).map(c=>c+"\u0337").join("");}
-
-function fullwidth(text){
-  return Array.from(text).map(c=>{
-    const code=c.charCodeAt(0);
-    if(code>=33&&code<=126)return String.fromCharCode(code+65248);
-    return c===" "?"　":c;
-  }).join("");
-}
-
-function renderFonts(){
-  const input=$("fontInput").value||"VISHAN EDITZ";
-  const query=$("fontSearch").value.toLowerCase();
-
-  const styles=fontMaps.map(font=>({
-    name:font.name,text:transformText(input,font.map)
-  }));
-
-  styles.push(
-    {name:"Bubble",text:bubble(input)},
-    {name:"Small Caps",text:smallCaps(input)},
-    {name:"Spaced",text:spaced(input)},
-    {name:"Reversed",text:reverseText(input)},
-    {name:"Strikethrough",text:strikeText(input)},
-    {name:"Underline",text:underlineText(input)},
-    {name:"Glitch",text:glitchText(input)},
-    {name:"Fullwidth",text:fullwidth(input)},
-    {name:"Bracket Style",text:"『 "+input+" 』"},
-    {name:"Star Style",text:"✦ "+input+" ✦"},
-    {name:"Royal Style",text:"♛ "+input+" ♛"},
-    {name:"Heart Style",text:"♡ "+input+" ♡"},
-    {name:"Arrow Style",text:"➤ "+input+" ◈"},
-    {name:"Minimal Style",text:"— "+input+" —"}
-  );
-
-  const filtered=styles.filter(font=>
-    font.name.toLowerCase().includes(query)
-  );
-
-  $("fontCount").textContent=filtered.length+" styles";
-  const container=$("fontResults");
-  container.innerHTML="";
-
-  if(!filtered.length){
-    container.innerHTML='<div class="empty">No styles found.</div>';
-    return;
-  }
-
-  filtered.forEach(font=>{
-    const card=document.createElement("div");
-    card.className="fontCard";
-
-    const preview=document.createElement("div");
-    preview.className="fontPreview";
-    preview.textContent=font.text;
-
-    const name=document.createElement("div");
-    name.className="fontName";
-    name.textContent=font.name;
-
-    const button=document.createElement("button");
-    button.className="secondary";
-    button.textContent="📋 Copy Style";
-    button.onclick=()=>copyText(font.text);
-
-    card.append(preview,name,button);
-    container.appendChild(card);
-  });
-}
-
-$("fontInput").addEventListener("input",renderFonts);
-$("fontSearch").addEventListener("input",renderFonts);
-
-/* STARTUP */
-buildCategoryButtons();
-renderTemplates();
-renderFonts();
+})();
 </script>
-</body>
-</html>
+
+<!-- END VIDEO CAPTION EDITOR PART 2 -->
