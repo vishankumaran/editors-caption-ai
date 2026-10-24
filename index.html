@@ -1,1833 +1,894 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#090a0f">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090b10">
 
-<title>Editors Caption AI — Typography Studio</title>
+  <meta name="description"
+    content="Editors Caption AI — professional caption templates, typography and video captions.">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <title>Editors Caption AI — Typography Studio</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Montserrat:ital,wght@0,400;0,700;0,800;0,900;1,700;1,800&family=Oswald:wght@400;600;700&family=Poppins:wght@400;600;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 
-<style>
-:root {
-    --bg: #090a0f;
-    --panel: #12141b;
-    --panel2: #191c25;
-    --border: #2b2e38;
-    --text: #f7f7fa;
-    --muted: #969baa;
-    --green: #37f58a;
-    --purple: #9b7bff;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Poppins', sans-serif;
-}
-
-button, input, select, textarea {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-button:disabled {
-    opacity: .5;
-    cursor: not-allowed;
-}
-
-header {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background: rgba(9,10,15,.97);
-    border-bottom: 1px solid var(--border);
-}
-
-.header-inner {
-    max-width: 1250px;
-    margin: auto;
-    padding: 15px 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.brand {
-    font-weight: 900;
-    letter-spacing: -.5px;
-    font-size: 18px;
-}
-
-.brand span {
-    color: var(--green);
-}
-
-.pill {
-    border: 1px solid #315d45;
-    color: var(--green);
-    padding: 5px 10px;
-    border-radius: 30px;
-    font-size: 10px;
-    font-weight: 800;
-}
-
-nav {
-    display: flex;
-    gap: 7px;
-    max-width: 1250px;
-    margin: auto;
-    padding: 0 12px 12px;
-    overflow-x: auto;
-}
-
-.nav-btn {
-    white-space: nowrap;
-    color: var(--muted);
-    background: transparent;
-    border: 1px solid transparent;
-    padding: 10px 13px;
-    border-radius: 9px;
-}
-
-.nav-btn.active {
-    background: var(--panel2);
-    border-color: var(--border);
-    color: var(--green);
-}
-
-main {
-    max-width: 1250px;
-    padding: 20px 15px 50px;
-    margin: auto;
-}
-
-.hero {
-    padding: 20px 0;
-}
-
-.hero h1 {
-    margin: 0 0 10px;
-    font-size: clamp(27px,5vw,45px);
-    line-height: 1.12;
-    font-weight: 900;
-}
-
-.gradient {
-    background: linear-gradient(90deg,#37f58a,#9b7bff);
-    color: transparent;
-    background-clip: text;
-    -webkit-background-clip: text;
-}
-
-.muted {
-    color: var(--muted);
-    font-size: 12px;
-}
-
-.panel {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 15px;
-    padding: 18px;
-    margin-bottom: 17px;
-}
-
-.panel h2 {
-    margin: 0 0 10px;
-    font-size: 21px;
-}
-
-.section {
-    display: none;
-}
-
-.section.active {
-    display: block;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2,minmax(0,1fr));
-    gap: 13px;
-}
-
-.field {
-    min-width: 0;
-    margin-bottom: 14px;
-}
-
-.field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 700;
-    color: #d2d5df;
-    margin-bottom: 7px;
-}
-
-input:not([type=color]):not([type=range]),
-select,
-textarea {
-    width: 100%;
-    background: #0c0e14;
-    color: white;
-    border: 1px solid var(--border);
-    padding: 12px;
-    border-radius: 9px;
-    outline: none;
-}
-
-input[type=color] {
-    width: 55px;
-    height: 40px;
-    background: transparent;
-    border: none;
-}
-
-input[type=range] {
-    width: 100%;
-    accent-color: var(--green);
-}
-
-textarea {
-    min-height: 85px;
-    resize: vertical;
-}
-
-.btn {
-    border: 1px solid var(--border);
-    background: var(--panel2);
-    color: white;
-    padding: 11px 14px;
-    border-radius: 9px;
-    font-weight: 800;
-    font-size: 12px;
-}
-
-.btn-primary {
-    background: var(--green);
-    color: #07110a;
-    border-color: var(--green);
-}
-
-.btn-purple {
-    background: #7552e8;
-    border-color: #7552e8;
-}
-
-.btn-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 12px;
-}
-
-.results {
-    display: grid;
-    grid-template-columns: repeat(2,minmax(0,1fr));
-    gap: 12px;
-    margin-top: 15px;
-}
-
-.card {
-    background: #0c0e14;
-    border: 1px solid var(--border);
-    border-radius: 11px;
-    padding: 14px;
-    overflow-wrap: anywhere;
-}
-
-.card p {
-    white-space: pre-wrap;
-}
-
-.small-btn {
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    color: white;
-    padding: 7px 9px;
-    border-radius: 7px;
-    font-size: 11px;
-}
-
-.template-grid {
-    display: grid;
-    grid-template-columns: repeat(2,minmax(0,1fr));
-    gap: 11px;
-}
-
-.template-card {
-    border: 1px solid var(--border);
-    background: #0c0e14;
-    border-radius: 12px;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.template-card.active {
-    border: 2px solid var(--green);
-}
-
-.template-preview {
-    height: 145px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 15px;
-    text-align: center;
-    overflow: hidden;
-    background:
-        radial-gradient(ellipse at center,#242730 0%,#0b0c10 75%);
-}
-
-.template-preview .sample {
-    white-space: pre-line;
-    overflow-wrap: anywhere;
-    max-width: 100%;
-}
-
-.template-meta {
-    padding: 10px;
-    font-size: 12px;
-    font-weight: 800;
-}
-
-.video-layout {
-    display: grid;
-    grid-template-columns: minmax(0,1.2fr) minmax(0,1fr);
-    gap: 15px;
-}
-
-.video-box {
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-    background: black;
-}
-
-video {
-    display: block;
-    width: 100%;
-    max-height: 70vh;
-    background: black;
-}
-
-.overlay {
-    position: absolute;
-    left: 4%;
-    right: 4%;
-    top: 50%;
-    transform: translateY(-50%);
-    text-align: center;
-    white-space: pre-line;
-    overflow-wrap: anywhere;
-    pointer-events: none;
-    line-height: 1.12;
-}
-
-.layer {
-    display: block;
-}
-
-.timeline {
-    display: grid;
-    gap: 9px;
-    margin-top: 12px;
-}
-
-.timeline-item {
-    background: #0c0e14;
-    border: 1px solid var(--border);
-    padding: 12px;
-    border-radius: 10px;
-}
-
-.status {
-    padding: 12px;
-    margin-top: 12px;
-    background: #0c0e14;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    color: var(--green);
-    font-size: 12px;
-    overflow-wrap: anywhere;
-}
-
-.notice {
-    background: #14231b;
-    border: 1px solid #315d45;
-    color: #c7ffdc;
-    padding: 12px;
-    border-radius: 9px;
-    font-size: 12px;
-    margin-bottom: 15px;
-}
-
-.empty {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 20px;
-    border: 1px dashed var(--border);
-    border-radius: 10px;
-    color: var(--muted);
-}
-
-.font-preview {
-    padding: 22px;
-    text-align: center;
-    background: #07080b;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow-wrap: anywhere;
-    font-size: 29px;
-}
-
-footer {
-    text-align: center;
-    padding: 24px;
-    border-top: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 11px;
-}
-
-@keyframes pop {
-    0% { transform: scale(.2); opacity: 0; }
-    70% { transform: scale(1.1); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes bounce {
-    0%,100% { transform: translateY(0); }
-    40% { transform: translateY(-10px); }
-    70% { transform: translateY(3px); }
-}
-
-@keyframes slide {
-    from { transform: translateX(-45px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes zoom {
-    from { transform: scale(.5); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-
-@keyframes fade {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.anim-pop { animation: pop .5s both; }
-.anim-bounce { animation: bounce .8s infinite; }
-.anim-slide { animation: slide .5s both; }
-.anim-zoom { animation: zoom .5s both; }
-.anim-fade { animation: fade .7s both; }
-
-@media(max-width:720px) {
-    .grid,
-    .results,
-    .video-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .panel {
-        padding: 14px;
-    }
-
-    .template-preview {
-        height: 125px;
-    }
-}
-</style>
 </head>
 
 <body>
-<header>
-    <div class="header-inner">
-        <div class="brand">EDITORS <span>CAPTION AI</span></div>
-        <span class="pill">TYPOGRAPHY STUDIO</span>
-    </div>
 
-    <nav>
-        <button class="nav-btn active" data-tab="captions">Captions</button>
-        <button class="nav-btn" data-tab="templates">Templates</button>
-        <button class="nav-btn" data-tab="fonts">Fonts</button>
-        <button class="nav-btn" data-tab="video">Video Editor</button>
-        <button class="nav-btn" data-tab="saved">Saved</button>
-    </nav>
+<header class="topbar">
+
+  <a class="brand" href="#" aria-label="Editors Caption AI home">
+
+    <span class="brand-mark">E</span>
+
+    <span>
+      EDITORS <b>CAPTION AI</b>
+      <small>TYPOGRAPHY STUDIO</small>
+    </span>
+
+  </a>
+
+  <div class="top-actions">
+    <span class="status-dot"></span>
+    <span class="top-label">CREATOR WORKSPACE</span>
+
+    <button
+      id="themeToggle"
+      class="icon-button"
+      title="Toggle light mode"
+      aria-label="Toggle theme">◐</button>
+  </div>
+
 </header>
 
-<main>
-<div class="hero">
-    <h1>Make your edits <span class="gradient">stand out.</span></h1>
-    <p class="muted">
-        Professional kinetic typography, stylish captions,
-        video-audio transcription and animated text templates.
-    </p>
-</div>
 
-<section id="captions" class="section active">
-    <div class="panel">
-        <h2>Caption Generator</h2>
+<div class="app-shell">
 
-        <div class="grid">
-            <div class="field">
-                <label for="category">Category</label>
-                <select id="category">
-                    <option value="attitude">Attitude</option>
-                    <option value="love">Love</option>
-                    <option value="sad">Sad</option>
-                    <option value="friendship">Friendship</option>
-                    <option value="mass">Mass</option>
-                    <option value="gaming">Gaming</option>
-                    <option value="motivation">Motivation</option>
-                    <option value="funny">Funny</option>
-                    <option value="life">Life</option>
-                    <option value="cinematic">Cinematic</option>
-                </select>
-            </div>
+  <!-- SIDEBAR -->
 
-            <div class="field">
-                <label for="language">Language</label>
-                <select id="language">
-                    <option value="thunglish">Thunglish</option>
-                    <option value="tamil">Tamil</option>
-                    <option value="english">English</option>
-                </select>
-            </div>
+  <aside class="sidebar">
+
+    <div class="sidebar-label">WORKSPACE</div>
+
+    <button class="nav-item active" data-tab="captions">
+      <span>✦</span> Caption Generator
+    </button>
+
+    <button class="nav-item" data-tab="templates">
+      <span>▦</span> Template Library
+      <i>12</i>
+    </button>
+
+    <button class="nav-item" data-tab="fonts">
+      <span>Aa</span> Font Studio
+    </button>
+
+    <button class="nav-item" data-tab="video">
+      <span>▶</span> Video Captioner
+    </button>
+
+    <button class="nav-item" data-tab="saved">
+      <span>♡</span> Saved Captions
+    </button>
+
+
+    <div class="sidebar-card">
+
+      <div class="sidebar-card-icon">✧</div>
+
+      <b>Make every word move.</b>
+
+      <p>
+        Build a consistent style for your next edit.
+      </p>
+
+      <button data-tab="templates" class="text-link">
+        Explore templates →
+      </button>
+
+    </div>
+
+
+    <div class="sidebar-footer">
+      EDITORS CAPTION AI
+      <span>v2.0</span>
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN CONTENT -->
+
+  <main class="main-content">
+
+    <section class="page-heading">
+
+      <div>
+
+        <div class="eyebrow">
+          YOUR CREATIVE WORKSPACE
         </div>
 
-        <div class="field">
-            <label for="keywords">Keywords</label>
-            <input id="keywords" placeholder="Your idea or mood">
+        <h1>
+          Typography that
+          <span class="gradient-text">hits different.</span>
+        </h1>
+
+        <p>
+          Create captions, explore styles, and preview text over your video.
+        </p>
+
+      </div>
+
+      <div class="heading-badge">
+        <span>●</span> READY TO CREATE
+      </div>
+
+    </section>
+
+
+    <!-- CAPTION GENERATOR -->
+
+    <section id="captions" class="page active">
+
+      <div class="section-title">
+
+        <div>
+          <h2>Caption generator</h2>
+
+          <p>
+            Find the right words for the mood of your edit.
+          </p>
         </div>
 
-        <button id="generateBtn" class="btn btn-primary">
-            Generate Captions
+        <span class="section-number">01 / CREATE</span>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="form-grid">
+
+          <label class="field">
+
+            <span>Caption category</span>
+
+            <select id="category">
+
+              <option value="attitude">Attitude & Swag</option>
+              <option value="love">Love & Romance</option>
+              <option value="sad">Sad & Emotional</option>
+              <option value="friendship">Friendship</option>
+              <option value="mass">Mass & Cinematic</option>
+              <option value="gaming">Gaming</option>
+              <option value="motivation">Motivation</option>
+              <option value="funny">Funny & Meme</option>
+              <option value="life">Life & Thoughts</option>
+              <option value="travel">Travel & Nature</option>
+              <option value="gym">Gym & Fitness</option>
+              <option value="edit">Editor / Reels</option>
+
+            </select>
+
+          </label>
+
+
+          <label class="field">
+
+            <span>Language</span>
+
+            <select id="language">
+
+              <option value="thunglish">
+                Thunglish (Tamil + English)
+              </option>
+
+              <option value="tamil">Tamil</option>
+
+              <option value="english">English</option>
+
+              <option value="mixed">
+                Mixed / Short punchlines
+              </option>
+
+            </select>
+
+          </label>
+
+        </div>
+
+
+        <label class="field">
+
+          <span>
+            Keywords or custom mood
+            <small>optional</small>
+          </span>
+
+          <input
+            id="keywords"
+            placeholder="e.g. night drive, friendship, comeback, rain...">
+
+        </label>
+
+
+        <div class="button-row">
+
+          <button id="generateBtn" class="btn btn-primary">
+            ✦ Generate captions
+          </button>
+
+          <button id="randomBtn" class="btn btn-secondary">
+            ↻ Surprise me
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="results-heading">
+
+        <h3>Caption ideas</h3>
+
+        <span id="resultCount" class="muted">
+          Ready when you are
+        </span>
+
+      </div>
+
+
+      <div id="captionResults" class="caption-grid"></div>
+
+    </section>
+
+
+
+    <!-- TEMPLATE LIBRARY -->
+
+    <section id="templates" class="page">
+
+      <div class="section-title">
+
+        <div>
+          <h2>Professional template library</h2>
+
+          <p>
+            Choose a design to apply its styling to the video editor.
+          </p>
+        </div>
+
+        <span class="section-number">02 / STYLE</span>
+
+      </div>
+
+
+      <div class="toolbar">
+
+        <label class="search-box">
+          ⌕
+          <input
+            id="templateSearch"
+            placeholder="Search templates...">
+        </label>
+
+
+        <select id="templateCategory" class="compact-select">
+
+          <option value="all">All styles</option>
+          <option value="kinetic">Kinetic</option>
+          <option value="neon">Neon & Glow</option>
+          <option value="cinematic">Cinematic</option>
+          <option value="minimal">Minimal</option>
+          <option value="social">Social / Reels</option>
+          <option value="romantic">Romantic</option>
+
+        </select>
+
+      </div>
+
+
+      <div id="templateResults" class="template-grid"></div>
+
+    </section>
+
+
+
+    <!-- FONT STUDIO -->
+
+    <section id="fonts" class="page">
+
+      <div class="section-title">
+
+        <div>
+          <h2>Font studio</h2>
+
+          <p>
+            Explore font families, weight, spacing and colour.
+          </p>
+        </div>
+
+        <span class="section-number">03 / TYPE</span>
+
+      </div>
+
+
+      <div class="panel">
+
+        <label class="field">
+
+          <span>Preview text</span>
+
+          <textarea id="fontInput" rows="2">PURE KINETIC ENERGY</textarea>
+
+        </label>
+
+
+        <div class="form-grid">
+
+          <label class="field">
+
+            <span>Font family</span>
+
+            <select id="fontFamily"></select>
+
+          </label>
+
+
+          <label class="field">
+
+            <span>Font weight</span>
+
+            <select id="fontWeight">
+
+              <option value="400">Regular</option>
+              <option value="600">Semi-bold</option>
+              <option value="700">Bold</option>
+              <option value="800" selected>Extra-bold</option>
+              <option value="900">Black</option>
+
+            </select>
+
+          </label>
+
+
+          <label class="field">
+
+            <span>Text colour</span>
+
+            <input id="fontColor" type="color" value="#ffffff">
+
+          </label>
+
+
+          <label class="field">
+
+            <span>Background colour</span>
+
+            <input id="fontBg" type="color" value="#10131b">
+
+          </label>
+
+
+          <label class="field">
+
+            <span>
+              Font size
+              <b id="fontSizeLabel">42px</b>
+            </span>
+
+            <input
+              id="fontSize"
+              type="range"
+              min="12"
+              max="96"
+              value="42">
+
+          </label>
+
+
+          <label class="field">
+
+            <span>
+              Letter spacing
+              <b id="spacingLabel">0px</b>
+            </span>
+
+            <input
+              id="letterSpacing"
+              type="range"
+              min="-2"
+              max="12"
+              value="0">
+
+          </label>
+
+        </div>
+
+
+        <div id="fontPreview" class="font-preview">
+          PURE KINETIC ENERGY
+        </div>
+
+
+        <div class="button-row">
+
+          <button id="copyFont" class="btn btn-secondary">
+            Copy text
+          </button>
+
+          <button id="useFont" class="btn btn-primary">
+            Use in video editor →
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <h3>Font collections</h3>
+
+        <p class="muted">
+          Font choices include bold display, condensed, geometric sans,
+          serif, script and monospace families. Web fonts load from
+          Google Fonts when you have an internet connection; the device
+          uses a fallback if they do not load.
+        </p>
+
+        <div id="fontChips" class="font-chips"></div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- VIDEO CAPTION EDITOR -->
+
+    <section id="video" class="page">
+
+      <div class="section-title">
+
+        <div>
+          <h2>Video caption editor</h2>
+
+          <p>
+            Upload a clip, style captions, and preview their timing.
+          </p>
+        </div>
+
+        <span class="section-number">04 / EDIT</span>
+
+      </div>
+
+
+      <div class="panel">
+
+        <label class="field">
+
+          <span>Upload video</span>
+
+          <input
+            id="videoFile"
+            type="file"
+            accept="video/*">
+
+        </label>
+
+
+        <div class="editor-layout">
+
+
+          <!-- VIDEO PREVIEW -->
+
+          <div class="preview-column">
+
+            <div class="video-stage" id="videoStage">
+
+              <video
+                id="videoPlayer"
+                controls
+                playsinline>
+              </video>
+
+              <div
+                id="videoCaption"
+                class="video-caption">
+              </div>
+
+              <div
+                id="emptyVideo"
+                class="video-placeholder">
+
+                <div class="play-symbol">▶</div>
+
+                <b>Your video preview</b>
+
+                <span>Upload a clip to start styling</span>
+
+              </div>
+
+            </div>
+
+
+            <div class="preview-foot">
+
+              <span>LIVE PREVIEW</span>
+
+              <span id="videoTime">00:00 / 00:00</span>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- VIDEO CONTROLS -->
+
+          <div class="editor-controls">
+
+            <div class="control-heading">
+
+              <span>CAPTION DESIGN</span>
+
+              <span class="live-chip">LIVE</span>
+
+            </div>
+
+
+            <label class="field">
+
+              <span>Template</span>
+
+              <select id="videoTemplate"></select>
+
+            </label>
+
+
+            <label class="field">
+
+              <span>Caption text</span>
+
+              <textarea
+                id="manualText"
+                rows="3"
+                placeholder="Type your caption here...">
+              </textarea>
+
+            </label>
+
+
+            <div class="form-grid">
+
+
+              <label class="field">
+
+                <span>Font family</span>
+
+                <select id="captionFont"></select>
+
+              </label>
+
+
+              <label class="field">
+
+                <span>Animation</span>
+
+                <select id="captionAnimation">
+
+                  <option value="none">None</option>
+                  <option value="pop">Pop</option>
+                  <option value="bounce">Bounce</option>
+                  <option value="slide">Slide in</option>
+                  <option value="zoom">Zoom</option>
+                  <option value="fade">Fade</option>
+                  <option value="type">Typewriter preview</option>
+
+                </select>
+
+              </label>
+
+
+              <label class="field">
+
+                <span>Text colour</span>
+
+                <input
+                  id="captionColor"
+                  type="color"
+                  value="#ffffff">
+
+              </label>
+
+
+              <label class="field">
+
+                <span>Highlight colour</span>
+
+                <input
+                  id="highlightColor"
+                  type="color"
+                  value="#b7ff00">
+
+              </label>
+
+
+              <label class="field">
+
+                <span>Outline colour</span>
+
+                <input
+                  id="outlineColor"
+                  type="color"
+                  value="#000000">
+
+              </label>
+
+
+              <label class="field">
+
+                <span>Shadow</span>
+
+                <select id="captionShadow">
+
+                  <option value="yes">On</option>
+                  <option value="no">Off</option>
+
+                </select>
+
+              </label>
+
+
+              <label class="field">
+
+                <span>
+                  Font size
+                  <b id="captionSizeLabel">44px</b>
+                </span>
+
+                <input
+                  id="captionSize"
+                  type="range"
+                  min="12"
+                  max="100"
+                  value="44">
+
+              </label>
+
+
+              <label class="field">
+
+                <span>
+                  Outline width
+                  <b id="outlineLabel">3px</b>
+                </span>
+
+                <input
+                  id="outlineWidth"
+                  type="range"
+                  min="0"
+                  max="12"
+                  value="3">
+
+              </label>
+
+
+              <label class="field">
+
+                <span>Position</span>
+
+                <select id="captionPosition">
+
+                  <option value="bottom">Bottom</option>
+                  <option value="middle">Middle</option>
+                  <option value="top">Top</option>
+
+                </select>
+
+              </label>
+
+
+              <label class="field">
+
+                <span>Layout</span>
+
+                <select id="captionLayout">
+
+                  <option value="single">Single line</option>
+                  <option value="stack">Kinetic stack</option>
+                  <option value="trio">Trio lockup</option>
+                  <option value="karaoke">Karaoke highlight</option>
+
+                </select>
+
+              </label>
+
+
+              <label class="field">
+
+                <span>Start (seconds)</span>
+
+                <input
+                  id="captionStart"
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  value="0">
+
+              </label>
+
+
+              <label class="field">
+
+                <span>End (seconds)</span>
+
+                <input
+                  id="captionEnd"
+                  type="number"
+                  min="0.1"
+                  step="0.1"
+                  value="3">
+
+              </label>
+
+            </div>
+
+
+            <div class="button-row">
+
+              <button
+                id="addVideoCaption"
+                class="btn btn-primary">
+                ＋ Add to timeline
+              </button>
+
+              <button
+                id="clearVideoCaptions"
+                class="btn btn-secondary">
+                Clear all
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- CAPTION TIMELINE -->
+
+      <div class="panel">
+
+        <div class="section-title compact">
+
+          <div>
+
+            <h3>Caption timeline</h3>
+
+            <p>
+              Tap edit to change a segment. Captions are stored
+              in this browser session.
+            </p>
+
+          </div>
+
+          <span
+            id="timelineCount"
+            class="section-number">
+            0 SEGMENTS
+          </span>
+
+        </div>
+
+
+        <div id="videoCaptionList" class="timeline-list"></div>
+
+      </div>
+
+
+
+      <!-- SUBTITLE EXPORT -->
+
+      <div class="panel">
+
+        <h3>Speech-to-text options</h3>
+
+        <p class="muted">
+          This static website supports manual captions and subtitle
+          exports. Automatically transcribing uploaded video audio
+          requires a speech-recognition model or API.
+        </p>
+
+
+        <div class="button-row">
+
+          <button
+            id="downloadSrt"
+            class="btn btn-secondary">
+            ↓ Download SRT subtitles
+          </button>
+
+          <button
+            id="exportVideo"
+            class="btn btn-primary">
+            Export captioned WebM
+          </button>
+
+        </div>
+
+
+        <div
+          id="videoStatus"
+          class="status-message"
+          aria-live="polite">
+          Ready. Upload a video to begin.
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- SAVED CAPTIONS -->
+
+    <section id="saved" class="page">
+
+      <div class="section-title">
+
+        <div>
+          <h2>Saved captions</h2>
+
+          <p>
+            Your saved caption ideas, stored locally in this browser.
+          </p>
+        </div>
+
+        <span class="section-number">05 / LIBRARY</span>
+
+      </div>
+
+
+      <div class="button-row">
+
+        <button
+          id="clearSaved"
+          class="btn btn-secondary">
+          Clear saved captions
         </button>
 
-        <div id="captionResults" class="results"></div>
-    </div>
-</section>
+      </div>
 
-<section id="templates" class="section">
-    <div class="panel">
-        <h2>Professional Templates</h2>
-        <p class="muted">
-            Tap a visual template to apply its design to your captions.
-        </p>
 
-        <div class="field">
-            <label for="templateCategory">Category</label>
-            <select id="templateCategory">
-                <option value="all">All Templates</option>
-                <option value="kinetic">Kinetic Typography</option>
-                <option value="cinematic">Cinematic</option>
-                <option value="neon">Neon</option>
-                <option value="minimal">Minimal</option>
-                <option value="romantic">Romantic</option>
-            </select>
-        </div>
+      <div id="savedResults" class="caption-grid"></div>
 
-        <div id="templateResults" class="template-grid"></div>
-    </div>
-</section>
+    </section>
 
-<section id="fonts" class="section">
-    <div class="panel">
-        <h2>Professional Font Studio</h2>
 
-        <div class="field">
-            <label for="fontInput">Text</label>
-            <textarea id="fontInput">PURE KINETIC ENERGY</textarea>
-        </div>
 
-        <div class="field">
-            <label for="fontStyle">Font family</label>
-            <select id="fontStyle">
-                <option value="Anton">Anton</option>
-                <option value="Bebas Neue">Bebas Neue</option>
-                <option value="Montserrat">Montserrat</option>
-                <option value="Oswald">Oswald</option>
-                <option value="Poppins">Poppins</option>
-                <option value="Playfair Display">Playfair Display</option>
-            </select>
-        </div>
+    <!-- FOOTER -->
 
-        <div class="field">
-            <label for="fontColor">Text colour</label>
-            <input id="fontColor" type="color" value="#ffffff">
-        </div>
+    <footer class="app-footer">
 
-        <div id="fontPreview" class="font-preview">PURE KINETIC ENERGY</div>
+      <span>EDITORS CAPTION AI</span>
 
-        <div class="btn-row">
-            <button id="copyFont" class="btn btn-primary">Copy Text</button>
-            <button id="useFont" class="btn">Use in Video</button>
-        </div>
-    </div>
-</section>
+      <span>Made for creators · Keep creating.</span>
 
-<section id="video" class="section">
-    <div class="panel">
-        <h2>Video Caption Editor</h2>
+    </footer>
 
-        <div class="notice">
-            Upload a video, generate captions from its audio,
-            apply a professional template and export your edit.
-        </div>
+  </main>
 
-        <div class="field">
-            <label for="videoFile">Upload video</label>
-            <input id="videoFile" type="file" accept="video/*">
-        </div>
+</div>
 
-        <div class="video-layout">
-            <div>
-                <div class="video-box">
-                    <video id="videoPlayer" controls playsinline></video>
-                    <div id="videoCaption" class="overlay"></div>
-                </div>
-            </div>
 
-            <div>
-                <h3>Text design</h3>
+<script src="script.js"></script>
 
-                <div class="field">
-                    <label for="captionFont">Font</label>
-                    <select id="captionFont">
-                        <option>Anton</option>
-                        <option>Bebas Neue</option>
-                        <option>Montserrat</option>
-                        <option>Oswald</option>
-                        <option>Poppins</option>
-                        <option>Playfair Display</option>
-                    </select>
-                </div>
-
-                <div class="grid">
-                    <div class="field">
-                        <label for="captionColor">Text colour</label>
-                        <input id="captionColor" type="color" value="#ffffff">
-                    </div>
-
-                    <div class="field">
-                        <label for="highlightColor">Highlight colour</label>
-                        <input id="highlightColor" type="color" value="#b7ff00">
-                    </div>
-
-                    <div class="field">
-                        <label for="outlineColor">Outline colour</label>
-                        <input id="outlineColor" type="color" value="#000000">
-                    </div>
-
-                    <div class="field">
-                        <label for="captionPosition">Position</label>
-                        <select id="captionPosition">
-                            <option value="bottom">Bottom</option>
-                            <option value="middle">Middle</option>
-                            <option value="top">Top</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label for="captionSize">
-                        Size: <span id="sizeValue">48</span>
-                    </label>
-                    <input id="captionSize" type="range" min="14" max="100" value="48">
-                </div>
-
-                <div class="field">
-                    <label for="outlineWidth">Outline thickness</label>
-                    <input id="outlineWidth" type="range" min="0" max="12" value="3">
-                </div>
-
-                <div class="field">
-                    <label for="captionAnimation">Animation</label>
-                    <select id="captionAnimation">
-                        <option value="pop">Pop</option>
-                        <option value="bounce">Bounce</option>
-                        <option value="slide">Slide</option>
-                        <option value="zoom">Zoom</option>
-                        <option value="fade">Fade</option>
-                        <option value="none">None</option>
-                    </select>
-                </div>
-
-                <div class="field">
-                    <label for="captionLayout">Layout</label>
-                    <select id="captionLayout">
-                        <option value="single">Single line</option>
-                        <option value="stack">Kinetic stack</option>
-                        <option value="trio">Trio lockup</option>
-                    </select>
-                </div>
-
-                <div class="field">
-                    <label for="manualText">Caption text</label>
-                    <textarea id="manualText" placeholder="Type your caption"></textarea>
-                </div>
-
-                <div class="grid">
-                    <div class="field">
-                        <label for="captionStart">Start (seconds)</label>
-                        <input id="captionStart" type="number" min="0" step=".1" value="0">
-                    </div>
-
-                    <div class="field">
-                        <label for="captionEnd">End (seconds)</label>
-                        <input id="captionEnd" type="number" min=".1" step=".1" value="3">
-                    </div>
-                </div>
-
-                <div class="btn-row">
-                    <button id="addVideoCaption" class="btn btn-primary">Add Caption</button>
-                    <button id="clearVideoCaptions" class="btn">Clear All</button>
-                </div>
-            </div>
-        </div>
-
-        <h3 style="margin-top:24px">Automatic video captions</h3>
-
-        <p class="muted">
-            The AI transcribes audio from the uploaded video,
-            not from your microphone. First-time setup requires internet.
-        </p>
-
-        <div class="btn-row">
-            <button id="autoSpeech" class="btn btn-purple">
-                Generate Captions from Video Audio
-            </button>
-
-            <button id="exportVideo" class="btn btn-primary">
-                Export Captioned Video
-            </button>
-        </div>
-
-        <div id="videoStatus" class="status" aria-live="polite"></div>
-
-        <h3 style="margin-top:24px">Caption Timeline</h3>
-        <div id="videoCaptionList" class="timeline"></div>
-    </div>
-</section>
-
-<section id="saved" class="section">
-    <div class="panel">
-        <h2>Saved Captions</h2>
-        <button id="clearSaved" class="btn">Clear Saved</button>
-        <div id="savedResults" class="results"></div>
-    </div>
-</section><script>
-"use strict";
-
-const $ = id => document.getElementById(id);
-
-/* NAVIGATION */
-
-function switchTab(name) {
-    document.querySelectorAll(".section").forEach(section => {
-        section.classList.toggle("active", section.id === name);
-    });
-
-    document.querySelectorAll(".nav-btn").forEach(button => {
-        button.classList.toggle("active", button.dataset.tab === name);
-    });
-
-    window.scrollTo({top:0,behavior:"smooth"});
-}
-
-document.querySelectorAll(".nav-btn").forEach(button => {
-    button.addEventListener("click", () => switchTab(button.dataset.tab));
-});
-
-
-/* CAPTION DATABASE */
-
-const database = {
-    attitude: [
-        ["Namma style vera level.","நம்ம ஸ்டைல் வேற லெவல்.","Our style is on another level."],
-        ["Silent ah irundhaalum power koraiyaadhu.","அமைதியாக இருப்பது பலவீனம் இல்லை.","Silence is not weakness."],
-        ["Namma route, namma rules.","நம் பாதை, நம் விதிகள்.","Our route. Our rules."],
-        ["Build-up illa, result pesum.","பேச்சை விட முடிவு பேசும்.","Let the results speak."],
-        ["Own vibe. Own identity.","தனித்துவமான அடையாளம்.","Own vibe. Own identity."]
-    ],
-    love: [
-        ["Un sirippu podhum.","உன் சிரிப்பு போதும்.","Your smile is enough."],
-        ["Nee dhaan en favourite.","நீ தான் எனக்குப் பிடித்தமானவர்.","You're my favourite."],
-        ["Un kooda irundha podhum.","உன்னுடன் இருந்தால் போதும்.","Being with you is enough."],
-        ["Simple moments, special memories.","சிறிய தருணங்கள், அழகான நினைவுகள்.","Simple moments. Special memories."],
-        ["Heart full of memories.","நினைவுகள் நிறைந்த இதயம்.","A heart full of memories."]
-    ],
-    sad: [
-        ["Sila feelings words la solla mudiyadhu.","சில உணர்வுகளை சொல்ல முடியாது.","Some feelings cannot be explained."],
-        ["Konjam silence, neraya thoughts.","கொஞ்சம் அமைதி, நிறைய எண்ணங்கள்.","A little silence. A thousand thoughts."],
-        ["Time pogum, memories stay.","காலம் போகும், நினைவுகள் இருக்கும்.","Time passes. Memories remain."],
-        ["Ellam solla mudiyadhu.","எல்லாவற்றையும் சொல்ல முடியாது.","Not everything can be said."],
-        ["Every smile has a story.","ஒவ்வொரு சிரிப்புக்கும் ஒரு கதை உண்டு.","Every smile has a story."]
-    ],
-    friendship: [
-        ["Friends illa, family dhaan.","நண்பர்கள் இல்லை, குடும்பம் தான்.","More than friends. Family."],
-        ["Namma gang, namma rules.","நம்ம கூட்டம், நம்ம விதிகள்.","Our gang. Our rules."],
-        ["Friendship ku expiry date illa.","நட்புக்கு காலாவதி தேதி இல்லை.","Friendship has no expiry date."],
-        ["Together is better.","ஒன்றாக இருப்பது சிறந்தது.","Together is better."],
-        ["Memories create panradhu namma speciality.","நினைவுகளை உருவாக்குவது நம் சிறப்பு.","Making memories is our speciality."]
-    ],
-    mass: [
-        ["PURE KINETIC ENERGY","தூய ஆற்றல்","PURE KINETIC ENERGY"],
-        ["Entry simple. Impact massive.","வருகை எளிமை, தாக்கம் பிரம்மாண்டம்.","Simple entry. Massive impact."],
-        ["One frame. Full vibe.","ஒரு காட்சி, முழு அதிர்வு.","One frame. Full vibe."],
-        ["Scene ah maatha vandhachu.","காட்சியை மாற்ற வந்துவிட்டோம்.","We came to change the scene."],
-        ["Style needs no explanation.","ஸ்டைலுக்கு விளக்கம் தேவையில்லை.","Style needs no explanation."]
-    ],
-    gaming: [
-        ["Aim clear. Mind steady.","குறி தெளிவு, மனம் உறுதி.","Clear aim. Steady mind."],
-        ["Clutch moment.","முக்கிய தருணம்.","Clutch moment."],
-        ["Practice dhaan real upgrade.","பயிற்சியே உண்மையான முன்னேற்றம்.","Practice is the real upgrade."],
-        ["Game start, focus full.","விளையாட்டு தொடங்கினால் கவனம் முழுவதும்.","Game on. Full focus."],
-        ["Play smart. Stay calm.","புத்திசாலித்தனமாக விளையாடு.","Play smart. Stay calm."]
-    ],
-    motivation: [
-        ["Slow progress um progress dhaan.","மெதுவான முன்னேற்றமும் முன்னேற்றமே.","Slow progress is still progress."],
-        ["Start small. Think big.","சிறியதாக தொடங்கு, பெரிதாக சிந்தி.","Start small. Think big."],
-        ["Consistency is the secret.","தொடர்ச்சியான முயற்சியே ரகசியம்.","Consistency is the secret."],
-        ["One step every day.","ஒவ்வொரு நாளும் ஒரு படி.","One step every day."],
-        ["Your effort matters.","உன் முயற்சி முக்கியம்.","Your effort matters."]
-    ],
-    funny: [
-        ["Brain loading...","மூளை இயங்குகிறது...","Brain loading..."],
-        ["Battery low, confidence high.","சார்ஜ் குறைவு, நம்பிக்கை அதிகம்.","Low battery. High confidence."],
-        ["Plan vera, nadandhadhu vera.","திட்டம் வேறு, நடந்தது வேறு.","The plan met reality."],
-        ["Trying to look serious.","தீவிரமாக இருக்க முயற்சி.","Trying to look serious."],
-        ["Mood: loading.","மனநிலை ஏற்றப்படுகிறது.","Mood: loading."]
-    ],
-    life: [
-        ["Move at your own pace.","உங்கள் வேகத்தில் செல்லுங்கள்.","Move at your own pace."],
-        ["Peace is also success.","மன அமைதியும் வெற்றிதான்.","Peace is also success."],
-        ["Every day brings a lesson.","ஒவ்வொரு நாளும் ஒரு பாடம்.","Every day brings a lesson."],
-        ["Life has its own rhythm.","வாழ்க்கைக்கு அதன் சொந்த ஓசை உண்டு.","Life has its own rhythm."],
-        ["Better days start small.","நல்ல நாட்கள் சிறியதாக தொடங்கும்.","Better days start small."]
-    ],
-    cinematic: [
-        ["One frame. A thousand feelings.","ஒரு காட்சி, ஆயிரம் உணர்வுகள்.","One frame. A thousand feelings."],
-        ["Lights. Mood. Memories.","ஒளி, மனநிலை, நினைவுகள்.","Lights. Mood. Memories."],
-        ["Every scene has a story.","ஒவ்வொரு காட்சிக்கும் ஒரு கதை உண்டு.","Every scene has a story."],
-        ["Life in cinematic frames.","திரைப்படக் காட்சிகளில் வாழ்க்கை.","Life in cinematic frames."],
-        ["This moment deserves a replay.","இந்த தருணம் மீண்டும் பார்க்கத் தகுதியானது.","This moment deserves a replay."]
-    ]
-};
-
-function languageIndex() {
-    return {thunglish:0,tamil:1,english:2}[$("language").value] ?? 0;
-}
-
-function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, char => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-    })[char]);
-}
-
-function generateCaptions() {
-    const list = database[$("category").value] || [];
-    const language = languageIndex();
-    const keywords = $("keywords").value.trim();
-    const results = $("captionResults");
-
-    results.replaceChildren();
-
-    list.forEach(row => {
-        const text = row[language] + (keywords ? "\n" + keywords : "");
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const paragraph = document.createElement("p");
-        paragraph.textContent = text;
-
-        const actions = document.createElement("div");
-        actions.className = "btn-row";
-
-        const makeButton = (label, callback) => {
-            const button = document.createElement("button");
-            button.className = "small-btn";
-            button.textContent = label;
-            button.addEventListener("click", callback);
-            actions.append(button);
-        };
-
-        makeButton("Copy", () => copyText(text));
-        makeButton("Save", () => saveCaption(text));
-        makeButton("Use in Video", () => {
-            $("manualText").value = text;
-            switchTab("video");
-        });
-
-        card.append(paragraph, actions);
-        results.append(card);
-    });
-}
-
-$("generateBtn").addEventListener("click", generateCaptions);
-$("category").addEventListener("change", generateCaptions);
-$("language").addEventListener("change", generateCaptions);
-
-
-/* CLIPBOARD */
-
-async function copyText(text) {
-    try {
-        await navigator.clipboard.writeText(text);
-        setStatus("Copied successfully.");
-    } catch {
-        const area = document.createElement("textarea");
-        area.value = text;
-        document.body.append(area);
-        area.select();
-
-        const success = document.execCommand("copy");
-        area.remove();
-
-        setStatus(success ? "Copied successfully." : "Copy failed.");
-    }
-}
-
-function setStatus(text) {
-    $("videoStatus").textContent = text;
-}
-
-
-/* SAVED CAPTIONS */
-
-const STORAGE_KEY = "editorsCaptionAI_professional_saved";
-
-let savedCaptions = [];
-
-try {
-    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    if (Array.isArray(parsed)) savedCaptions = parsed;
-} catch {}
-
-function saveCaption(text) {
-    if (!savedCaptions.includes(text)) savedCaptions.unshift(text);
-    savedCaptions = savedCaptions.slice(0,200);
-
-    try {
-        localStorage.setItem(STORAGE_KEY,JSON.stringify(savedCaptions));
-    } catch {}
-
-    renderSaved();
-    setStatus("Caption saved.");
-}
-
-function renderSaved() {
-    const root = $("savedResults");
-    root.replaceChildren();
-
-    if (!savedCaptions.length) {
-        root.innerHTML = '<div class="empty">No saved captions yet.</div>';
-        return;
-    }
-
-    savedCaptions.forEach(text => {
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const paragraph = document.createElement("p");
-        paragraph.textContent = text;
-
-        const button = document.createElement("button");
-        button.className = "small-btn";
-        button.textContent = "Use in Video";
-
-        button.addEventListener("click", () => {
-            $("manualText").value = text;
-            switchTab("video");
-        });
-
-        card.append(paragraph,button);
-        root.append(card);
-    });
-}
-
-$("clearSaved").addEventListener("click", () => {
-    if (!confirm("Delete saved captions?")) return;
-    savedCaptions = [];
-    localStorage.removeItem(STORAGE_KEY);
-    renderSaved();
-});
-
-
-/* PROFESSIONAL TEMPLATE DEFINITIONS */
-
-const templates = [
-    {
-        name:"Kinetic Stack",
-        category:"kinetic",
-        font:"Anton",
-        color:"#ffffff",
-        highlight:"#b7ff00",
-        outline:"#000000",
-        outlineWidth:3,
-        size:48,
-        position:"middle",
-        animation:"pop",
-        layout:"stack",
-        shadow:true
-    },
-    {
-        name:"Trio Lockup",
-        category:"kinetic",
-        font:"Montserrat",
-        color:"#ffffff",
-        highlight:"#ffffff",
-        outline:"#000000",
-        outlineWidth:1,
-        size:43,
-        position:"middle",
-        animation:"fade",
-        layout:"trio",
-        shadow:true
-    },
-    {
-        name:"Neon Glow",
-        category:"neon",
-        font:"Montserrat",
-        color:"#39ff14",
-        highlight:"#39ff14",
-        outline:"#102800",
-        outlineWidth:2,
-        size:48,
-        position:"middle",
-        animation:"bounce",
-        layout:"single",
-        shadow:true
-    },
-    {
-        name:"Hyper Clean",
-        category:"minimal",
-        font:"Bebas Neue",
-        color:"#ffffff",
-        highlight:"#37f58a",
-        outline:"#000000",
-        outlineWidth:1,
-        size:45,
-        position:"bottom",
-        animation:"slide",
-        layout:"stack",
-        shadow:false
-    },
-    {
-        name:"Cinematic",
-        category:"cinematic",
-        font:"Playfair Display",
-        color:"#ffffff",
-        highlight:"#e5c58a",
-        outline:"#000000",
-        outlineWidth:1,
-        size:38,
-        position:"bottom",
-        animation:"fade",
-        layout:"single",
-        shadow:true
-    },
-    {
-        name:"Romantic",
-        category:"romantic",
-        font:"Montserrat",
-        color:"#ff9fcf",
-        highlight:"#ffffff",
-        outline:"#350b22",
-        outlineWidth:2,
-        size:40,
-        position:"middle",
-        animation:"zoom",
-        layout:"trio",
-        shadow:true
-    }
-];
-
-let selectedTemplate = templates[0];
-
-function applyTemplate(template) {
-    selectedTemplate = template;
-
-    $("captionFont").value = template.font;
-    $("captionColor").value = template.color;
-    $("highlightColor").value = template.highlight;
-    $("outlineColor").value = template.outline;
-    $("outlineWidth").value = template.outlineWidth;
-    $("captionSize").value = template.size;
-    $("sizeValue").textContent = template.size;
-    $("captionPosition").value = template.position;
-    $("captionAnimation").value = template.animation;
-    $("captionLayout").value = template.layout;
-
-    renderTemplates();
-    updateVideoCaption();
-    switchTab("video");
-
-    setStatus(template.name + " template applied.");
-}
-
-function renderTemplates() {
-    const root = $("templateResults");
-    const category = $("templateCategory").value;
-    root.replaceChildren();
-
-    templates.filter(template =>
-        category === "all" || template.category === category
-    ).forEach(template => {
-        const card = document.createElement("div");
-        card.className = "template-card" +
-            (template.name === selectedTemplate.name ? " active" : "");
-
-        const preview = document.createElement("div");
-        preview.className = "template-preview";
-
-        const sample = document.createElement("div");
-        sample.className = "sample";
-        sample.style.fontFamily = "'" + template.font + "',sans-serif";
-        sample.style.color = template.color;
-        sample.style.fontSize = "25px";
-        sample.style.fontWeight = "900";
-        sample.style.textShadow = template.shadow
-            ? "2px 3px 4px #000"
-            : "none";
-
-        sample.style.webkitTextStroke =
-            Math.min(template.outlineWidth,3) + "px " + template.outline;
-
-        sample.textContent = template.layout === "stack"
-            ? "PURE\nKINETIC\nENERGY"
-            : template.layout === "trio"
-            ? "Unbelievable\nRIGHT"
-            : template.name.toUpperCase();
-
-        if (template.layout === "stack") {
-            sample.innerHTML =
-                '<span style="color:white">PURE</span><br>' +
-                '<span style="color:' + template.highlight + '">KINETIC</span><br>' +
-                '<span style="color:white">ENERGY</span>';
-        }
-
-        preview.append(sample);
-
-        const meta = document.createElement("div");
-        meta.className = "template-meta";
-        meta.textContent = template.name;
-
-        card.append(preview,meta);
-        card.addEventListener("click", () => applyTemplate(template));
-        root.append(card);
-    });
-}
-
-$("templateCategory").addEventListener("change",renderTemplates);
-
-
-/* FONT STUDIO */
-
-function updateFontPreview() {
-    const preview = $("fontPreview");
-    preview.textContent = $("fontInput").value;
-    preview.style.fontFamily = "'" + $("fontStyle").value + "',sans-serif";
-    preview.style.color = $("fontColor").value;
-}
-
-["fontInput","fontStyle","fontColor"].forEach(id => {
-    $(id).addEventListener("input",updateFontPreview);
-});
-
-$("copyFont").addEventListener("click",() => {
-    copyText($("fontInput").value);
-});
-
-$("useFont").addEventListener("click",() => {
-    $("manualText").value = $("fontInput").value;
-    $("captionFont").value = $("fontStyle").value;
-    $("captionColor").value = $("fontColor").value;
-    switchTab("video");
-});
-
-
-/* END PART 2 — PART 3 CONTINUES *//* VIDEO ENGINE */
-
-let videoCaptions = [];
-let videoURL = null;
-let ffmpegInstance = null;
-let whisperTranscriber = null;
-let transcriptionBusy = false;
-let exportBusy = false;
-
-const player = $("videoPlayer");
-const overlay = $("videoCaption");
-
-function duration() {
-    return Number.isFinite(player.duration) ? player.duration : 0;
-}
-
-function captionStyle(caption) {
-    return caption || selectedTemplate;
-}
-
-function updateVideoCaption() {
-    const time = player.currentTime || 0;
-    const active = videoCaptions.filter(caption =>
-        time >= caption.start && time < caption.end
-    );
-
-    overlay.replaceChildren();
-
-    if (!active.length) return;
-
-    const caption = active[active.length - 1];
-    const style = captionStyle(caption);
-    const text = caption.text;
-
-    overlay.style.fontFamily = "'" + style.font + "',sans-serif";
-    overlay.style.fontSize = style.size + "px";
-    overlay.style.fontWeight = "900";
-    overlay.style.color = style.color;
-    overlay.style.webkitTextStroke =
-        style.outlineWidth + "px " + style.outline;
-    overlay.style.textShadow = style.shadow
-        ? "3px 3px 5px #000"
-        : "none";
-
-    overlay.style.top =
-        style.position === "top" ? "10%" :
-        style.position === "middle" ? "50%" :
-        "auto";
-
-    overlay.style.bottom =
-        style.position === "bottom" ? "9%" : "auto";
-
-    overlay.style.transform =
-        style.position === "middle" ? "translateY(-50%)" : "none";
-
-    const layout = style.layout || "single";
-    const animation = style.animation || "none";
-
-    const lines = layout === "stack"
-        ? text.split(/\s+/)
-        : [text];
-
-    lines.forEach((line,index) => {
-        const span = document.createElement("span");
-        span.className = "layer";
-        span.textContent = line;
-
-        if (layout === "stack" && index % 2 === 1) {
-            span.style.color = style.highlight;
-            span.style.webkitTextStroke =
-                style.outlineWidth + "px " + style.outline;
-        }
-
-        if (layout === "trio" && index === 1) {
-            span.style.fontStyle = "italic";
-            span.style.fontSize = "0.45em";
-            span.style.letterSpacing = ".25em";
-        }
-
-        if (animation !== "none") {
-            span.classList.add("anim-" + animation);
-        }
-
-        overlay.append(span);
-    });
-}
-
-player.addEventListener("timeupdate",updateVideoCaption);
-player.addEventListener("seeked",updateVideoCaption);
-
-$("videoFile").addEventListener("change",event => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    if (!file.type.startsWith("video/")) {
-        setStatus("Select a valid video file.");
-        return;
-    }
-
-    if (videoURL) URL.revokeObjectURL(videoURL);
-
-    videoURL = URL.createObjectURL(file);
-    player.src = videoURL;
-
-    videoCaptions = [];
-    renderVideoCaptionList();
-    updateVideoCaption();
-
-    setStatus("Video loaded. Ready to edit captions.");
-});
-
-
-/* MANUAL CAPTIONS */
-
-function addCaption(text,start,end,style = selectedTemplate) {
-    text = String(text || "").trim();
-    start = Number(start);
-    end = Number(end);
-
-    if (!text) throw new Error("Enter caption text.");
-    if (!Number.isFinite(start) || !Number.isFinite(end) ||
-        start < 0 || end <= start) {
-        throw new Error("Enter valid caption timings.");
-    }
-
-    if (duration() && start >= duration()) {
-        throw new Error("Start time is after the video ends.");
-    }
-
-    if (duration()) end = Math.min(end,duration());
-    if (end <= start) throw new Error("Invalid end time.");
-
-    videoCaptions.push({
-        id: Date.now() + Math.random(),
-        text,
-        start,
-        end,
-        ...style
-    });
-
-    videoCaptions.sort((a,b) => a.start - b.start);
-    renderVideoCaptionList();
-    updateVideoCaption();
-}
-
-$("addVideoCaption").addEventListener("click",() => {
-    try {
-        const style = {
-            font:$("captionFont").value,
-            color:$("captionColor").value,
-            highlight:$("highlightColor").value,
-            outline:$("outlineColor").value,
-            outlineWidth:Number($("outlineWidth").value),
-            size:Number($("captionSize").value),
-            position:$("captionPosition").value,
-            animation:$("captionAnimation").value,
-            layout:$("captionLayout").value,
-            shadow:true
-        };
-
-        addCaption(
-            $("manualText").value,
-            $("captionStart").value,
-            $("captionEnd").value,
-            style
-        );
-
-        setStatus("Caption added.");
-    } catch(error) {
-        setStatus(error.message);
-    }
-});
-
-$("clearVideoCaptions").addEventListener("click",() => {
-    if (!confirm("Remove all captions?")) return;
-    videoCaptions = [];
-    renderVideoCaptionList();
-    updateVideoCaption();
-    setStatus("All captions cleared.");
-});
-
-
-/* TIMELINE */
-
-function renderVideoCaptionList() {
-    const root = $("videoCaptionList");
-    root.replaceChildren();
-
-    if (!videoCaptions.length) {
-        root.innerHTML = '<div class="empty">No captions added yet.</div>';
-        return;
-    }
-
-    videoCaptions.forEach(caption => {
-        const item = document.createElement("div");
-        item.className = "timeline-item";
-
-        const p = document.createElement("p");
-        p.textContent = caption.text;
-
-        const time = document.createElement("div");
-        time.className = "muted";
-        time.textContent =
-            caption.start.toFixed(2) + "s – " +
-            caption.end.toFixed(2) + "s";
-
-        const edit = document.createElement("button");
-        edit.className = "small-btn";
-        edit.textContent = "Edit";
-
-        edit.addEventListener("click",() => {
-            $("manualText").value = caption.text;
-            $("captionStart").value = caption.start;
-            $("captionEnd").value = caption.end;
-
-            $("captionFont").value = caption.font;
-            $("captionColor").value = caption.color;
-            $("highlightColor").value = caption.highlight;
-            $("outlineColor").value = caption.outline;
-            $("outlineWidth").value = caption.outlineWidth;
-            $("captionSize").value = caption.size;
-            $("captionPosition").value = caption.position;
-            $("captionAnimation").value = caption.animation;
-            $("captionLayout").value = caption.layout;
-
-            player.currentTime = caption.start;
-        });
-
-        const remove = document.createElement("button");
-        remove.className = "small-btn";
-        remove.textContent = "Delete";
-
-        remove.addEventListener("click",() => {
-            videoCaptions = videoCaptions.filter(c => c.id !== caption.id);
-            renderVideoCaptionList();
-            updateVideoCaption();
-        });
-
-        item.append(p,time,edit,remove);
-        root.append(item);
-    });
-}
-
-
-/* WHISPER AND FFMPEG */
-
-async function loadCaptionAI() {
-    if (!ffmpegInstance) {
-        setStatus("Loading audio extraction tools...");
-
-        const {FFmpeg} = await import(
-            "https://esm.sh/@ffmpeg/ffmpeg@0.12.10"
-        );
-
-        const {toBlobURL} = await import(
-            "https://esm.sh/@ffmpeg/util@0.12.1"
-        );
-
-        ffmpegInstance = new FFmpeg();
-
-        const baseURL =
-            "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
-
-        await ffmpegInstance.load({
-            coreURL:await toBlobURL(
-                baseURL + "/ffmpeg-core.js","text/javascript"
-            ),
-            wasmURL:await toBlobURL(
-                baseURL + "/ffmpeg-core.wasm","application/wasm"
-            )
-        });
-    }
-
-    if (!whisperTranscriber) {
-        setStatus("Loading multilingual Whisper model...");
-
-        const {pipeline,env} = await import(
-            "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2"
-        );
-
-        env.allowLocalModels = false;
-        env.useBrowserCache = true;
-
-        whisperTranscriber = await pipeline(
-            "automatic-speech-recognition",
-            "Xenova/whisper-tiny"
-        );
-    }
-}
-
-async function extractVideoAudio(file) {
-    await ffmpegInstance.writeFile(
-        "input_video",
-        new Uint8Array(await file.arrayBuffer())
-    );
-
-    setStatus("Extracting the video's audio...");
-
-    const result = await ffmpegInstance.exec([
-        "-i","input_video",
-        "-vn","-ac","1","-ar","16000",
-        "-c:a","pcm_s16le",
-        "speech.wav"
-    ]);
-
-    if (result !== 0) {
-        throw new Error("Could not extract audio from this video.");
-    }
-
-    const bytes = await ffmpegInstance.readFile("speech.wav");
-
-    const buffer = bytes.buffer.slice(
-        bytes.byteOffset,
-        bytes.byteOffset + bytes.byteLength
-    );
-
-    const Context = window.AudioContext || window.webkitAudioContext;
-
-    const context = new Context({sampleRate:16000});
-
-    try {
-        const audioBuffer = await context.decodeAudioData(buffer);
-
-        return {
-            samples:new Float32Array(audioBuffer.getChannelData(0)),
-            duration:audioBuffer.duration
-        };
-    } finally {
-        await context.close();
-    }
-}
-
-
-/* AUTO CAPTIONS FROM ACTUAL VIDEO AUDIO */
-
-$("autoSpeech").addEventListener("click",async () => {
-    if (transcriptionBusy) return;
-
-    const file = $("videoFile").files[0];
-
-    if (!file) {
-        setStatus("Upload a video first.");
-        return;
-    }
-
-    if (file.size > 300 * 1024 * 1024) {
-        setStatus("This prototype supports videos up to 300 MB.");
-        return;
-    }
-
-    transcriptionBusy = true;
-    $("autoSpeech").disabled = true;
-
-    try {
-        await loadCaptionAI();
-
-        const audio = await extractVideoAudio(file);
-
-        setStatus("Whisper is recognizing the video speech...");
-
-        const result = await whisperTranscriber(audio.samples,{
-            sampling_rate:16000,
-            return_timestamps:true,
-            chunk_length_s:30,
-            stride_length_s:5,
-            task:"transcribe"
-        });
-
-        if (!result || !Array.isArray(result.chunks)) {
-            throw new Error(
-                "The model did not return timestamped captions."
-            );
-        }
-
-        const generated = [];
-
-        result.chunks.forEach(chunk => {
-            if (!chunk.timestamp || !chunk.text) return;
-
-            const start = Number(chunk.timestamp[0]);
-            const end = Number(chunk.timestamp[1]);
-            const text = String(chunk.text).trim();
-
-            if (!text || !Number.isFinite(start) ||
-                !Number.isFinite(end) || end <= start) return;
-
-            const style = {
-                font:$("captionFont").value,
-                color:$("captionColor").value,
-                highlight:$("highlightColor").value,
-                outline:$("outlineColor").value,
-                outlineWidth:Number($("outlineWidth").value),
-                size:Number($("captionSize").value),
-                position:$("captionPosition").value,
-                animation:$("captionAnimation").value,
-                layout:$("captionLayout").value,
-                shadow:true
-            };
-
-            generated.push({
-                id:Date.now() + Math.random(),
-                text,
-                start:Math.min(start,audio.duration),
-                end:Math.min(end,audio.duration),
-                ...style
-            });
-        });
-
-        const valid = generated.filter(c =>
-            c.text && c.end > c.start
-        );
-
-        if (!valid.length) {
-            throw new Error(
-                "No valid timestamped speech was returned."
-            );
-        }
-
-        videoCaptions.push(...valid);
-        videoCaptions.sort((a,b) => a.start - b.start);
-
-        renderVideoCaptionList();
-        updateVideoCaption();
-
-        setStatus(
-            "Generated " + valid.length +
-            " caption segments from your video audio. Review them before exporting."
-        );
-
-    } catch(error) {
-        console.error(error);
-        setStatus(
-            "Transcription failed: " + error.message +
-            ". Try a shorter video, check your connection, and retry."
-        );
-    } finally {
-        transcriptionBusy = false;
-        $("autoSpeech").disabled = false;
-    }
-});
-
-
-/* VIDEO EXPORT WITH BURNED-IN CAPTIONS */
-
-function recorderMimeType() {
-    if (!window.MediaRecorder) return "";
-
-    return [
-        "video/webm;codecs=vp9,opus",
-        "video/webm;codecs=vp8,opus",
-        "video/webm"
-    ].find(type => MediaRecorder.isTypeSupported(type)) || "";
-}
-
-function drawWrapped(ctx,text,x,y,maxWidth,lineHeight) {
-    const words = String(text).split(/\s+/);
-    const lines = [];
-    let line = "";
-
-    for (const word of words) {
-        const candidate = line ? line + " " + word : word;
-
-        if (ctx.measureText(candidate).width > maxWidth && line) {
-            lines.push(line);
-            line = word;
-        } else {
-            line = candidate;
-        }
-    }
-
-    if (line) lines.push(line);
-
-    lines.forEach((part,index) => {
-        const offset = (index - (lines.length-1)/2) * lineHeight;
-        ctx.strokeText(part,x,y+offset);
-        ctx.fillText(part,x,y+offset);
-    });
-}
-
-$("exportVideo").addEventListener("click",async () => {
-    if (exportBusy) return;
-
-    if (!player.src || !duration()) {
-        setStatus("Upload and load a video first.");
-        return;
-    }
-
-    if (!videoCaptions.length) {
-        setStatus("Add captions before exporting.");
-        return;
-    }
-
-    if (!window.MediaRecorder ||
-        !HTMLCanvasElement.prototype.captureStream) {
-        setStatus("Video export is unsupported in this browser.");
-        return;
-    }
-
-    exportBusy = true;
-    $("exportVideo").disabled = true;
-
-    const originalTime = player.currentTime;
-    let stream = null;
-    let recorder = null;
-    let animation = null;
-
-    try {
-        const canvas = document.createElement("canvas");
-        canvas.width = player.videoWidth || 720;
-        canvas.height = player.videoHeight || 1280;
-
-        const ctx = canvas.getContext("2d");
-        stream = canvas.captureStream(30);
-
-        const capture = player.captureStream || player.mozCaptureStream;
-
-        if (capture) {
-            const sourceStream = capture.call(player);
-            sourceStream.getAudioTracks().forEach(track => stream.addTrack(track));
-        }
-
-        const mimeType = recorderMimeType();
-
-        if (!mimeType) throw new Error("No compatible video encoder.");
-
-        const chunks = [];
-
-        recorder = new MediaRecorder(stream,{
-            mimeType,
-            videoBitsPerSecond:5000000
-        });
-
-        const finished = new Promise((resolve,reject) => {
-            recorder.ondataavailable = event => {
-                if (event.data.size) chunks.push(event.data);
-            };
-            recorder.onerror = () => reject(new Error("Recording failed."));
-            recorder.onstop = resolve;
-        });
-
-        function draw() {
-            if (!recorder || recorder.state !== "recording") return;
-
-            ctx.drawImage(player,0,0,canvas.width,canvas.height);
-
-            const time = player.currentTime;
-            const active = videoCaptions.filter(c =>
-                time >= c.start && time < c.end
-            );
-
-            if (active.length) {
-                const c = active[active.length-1];
-                const scale = canvas.height / 720;
-                const size = Math.round(c.size * scale);
-
-                ctx.font = `900 ${size}px "${c.font}"`;
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.lineJoin = "round";
-                ctx.lineWidth = Math.max(2,c.outlineWidth * scale);
-                ctx.strokeStyle = c.outline || "#000000";
-                ctx.fillStyle = c.color || "#ffffff";
-
-                let y = canvas.height * .88;
-                if (c.position === "top") y = canvas.height * .12;
-                if (c.position === "middle") y = canvas.height * .5;
-
-                if (c.shadow) {
-                    ctx.shadowColor = "#000000";
-                    ctx.shadowBlur = 5;
-                    ctx.shadowOffsetY = 3;
-                } else {
-                    ctx.shadowBlur = 0;
-                    ctx.shadowOffsetY = 0;
-                }
-
-                drawWrapped(
-                    ctx,c.text,canvas.width/2,y,
-                    canvas.width*.9,size*1.2
-                );
-
-                ctx.shadowBlur = 0;
-                ctx.shadowOffsetY = 0;
-            }
-
-            animation = requestAnimationFrame(draw);
-        }
-
-        player.pause();
-        player.currentTime = 0;
-
-        await new Promise(resolve => {
-            if (player.readyState >= 2) return resolve();
-            player.addEventListener("loadeddata",resolve,{once:true});
-        });
-
-        recorder.start(1000);
-        draw();
-
-        setStatus("Exporting in real time. Keep the page open.");
-
-        await player.play();
-
-        await new Promise(resolve => {
-            player.addEventListener("ended",resolve,{once:true});
-        });
-
-        if (recorder.state !== "inactive") recorder.stop();
-
-        await finished;
-
-        const blob = new Blob(chunks,{type:mimeType});
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-
-        link.href = url;
-        link.download = "editors-caption-ai.webm";
-        document.body.append(link);
-        link.click();
-        link.remove();
-
-        setTimeout(() => URL.revokeObjectURL(url),60000);
-
-        setStatus("Export complete. Your captioned WebM was downloaded.");
-
-    } catch(error) {
-        console.error(error);
-        setStatus("Export failed: " + error.message);
-        if (recorder && recorder.state !== "inactive") {
-            try { recorder.stop(); } catch {}
-        }
-    } finally {
-        if (animation !== null) cancelAnimationFrame(animation);
-        if (stream) stream.getTracks().forEach(track => track.stop());
-
-        player.pause();
-
-        try { player.currentTime = originalTime; } catch {}
-
-        exportBusy = false;
-        $("exportVideo").disabled = false;
-    }
-});
-
-
-/* INITIALIZE */
-
-function initializeApp() {
-    renderTemplates();
-    renderSaved();
-    generateCaptions();
-    updateFontPreview();
-
-    $("sizeValue").textContent = $("captionSize").value;
-    applyTemplate(templates[0]);
-}
-
-initializeApp();
-
-</script>
-
-<footer>
-    EDITORS CAPTION AI — Professional Typography Studio
-</footer>
-
-</main>
 </body>
 </html>
