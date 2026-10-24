@@ -1,845 +1,1477 @@
-<!-- VIDEO CAPTION EDITOR: PART 1 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#100b1c">
+<title>Editors Caption AI</title>
 
 <style>
-.video-editor {
-  background: #11101b;
-  color: #ffffff;
-  padding: 20px;
-  border-radius: 18px;
-  margin: 25px 0;
+:root {
+  --bg: #100b1c;
+  --panel: #1b142b;
+  --panel2: #251b38;
+  --pink: #ff72d2;
+  --purple: #b78aff;
+  --text: #ffffff;
+  --muted: #c2b5d6;
+  --border: #403052;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
   font-family: Arial, sans-serif;
-  border: 1px solid #393047;
 }
 
-.video-editor h2 {
+header {
+  padding: 26px 16px;
   text-align: center;
-  color: #e7a5ff;
-  margin-bottom: 8px;
+  background: linear-gradient(135deg,#25123b,#421c54,#20113c);
+  border-bottom: 1px solid var(--border);
 }
 
-.video-editor .ve-subtitle {
-  text-align: center;
-  color: #c5bdd2;
-  font-size: 13px;
-  margin-bottom: 20px;
+header h1 {
+  margin: 0;
+  font-size: clamp(25px,6vw,38px);
+  background: linear-gradient(90deg,#fff,#ff72d2,#b78aff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
-.ve-upload {
-  display: block;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 14px;
-  border: 1px dashed #c084fc;
-  border-radius: 12px;
-  background: #20192e;
+header p {
+  color: var(--muted);
+  margin-bottom: 0;
+}
+
+nav {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 12px;
+  background: #160f23;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+nav button {
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  background: var(--panel);
   color: white;
-  margin-bottom: 16px;
+  padding: 11px 15px;
+  border-radius: 25px;
+  font-weight: bold;
 }
 
-.ve-preview {
-  position: relative;
+nav button.active {
+  background: linear-gradient(100deg,#c084fc,#ff72d2);
+  color: #190d24;
+}
+
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 16px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 17px;
+  border-radius: 16px;
+  margin-bottom: 18px;
+}
+
+h2 { font-size: 22px; }
+h3 { font-size: 17px; }
+
+label {
+  display: block;
+  margin: 13px 0 7px;
+  color: #e4d7f5;
+  font-size: 14px;
+}
+
+input, select, textarea {
   width: 100%;
+  padding: 12px;
+  border-radius: 9px;
+  border: 1px solid #55436d;
+  background: #120d1d;
+  color: white;
+  font: inherit;
+}
+
+textarea {
+  min-height: 85px;
+  resize: vertical;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+.btn {
+  padding: 12px 15px;
+  border: 0;
+  border-radius: 9px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.primary {
+  color: #190d24;
+  background: linear-gradient(100deg,#c084fc,#ff72d2);
+}
+
+.secondary {
+  background: var(--panel2);
+  color: white;
+  border: 1px solid var(--border);
+}
+
+.full { width: 100%; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 12px;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 10px;
+}
+
+.template {
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel2);
+  color: white;
+  padding: 12px;
+  line-height: 1.5;
+}
+
+.template strong {
+  display: block;
+  color: var(--pink);
+  margin-bottom: 5px;
+}
+
+.result {
+  margin-top: 15px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #120d1d;
+  border: 1px solid var(--border);
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.hidden { display: none !important; }
+
+.font-preview {
+  font-size: 23px;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+
+.video-preview {
+  position: relative;
   background: #000;
   border-radius: 12px;
   overflow: hidden;
-  min-height: 190px;
+  min-height: 150px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
-.ve-preview video {
-  display: block;
+.video-preview video {
   width: 100%;
-  max-height: 450px;
+  max-height: 480px;
 }
 
-.ve-placeholder {
-  color: #aaa;
-  padding: 35px 10px;
-  text-align: center;
-}
-
-.ve-caption-overlay {
+.video-overlay {
   position: absolute;
   left: 4%;
   right: 4%;
   bottom: 10%;
   text-align: center;
-  font-size: 26px;
+  font-size: 27px;
   font-weight: 900;
-  color: #ffffff;
-  overflow-wrap: anywhere;
   white-space: pre-wrap;
-  pointer-events: none;
-  text-shadow:
-    -2px -2px 2px #000,
-    2px -2px 2px #000,
-    -2px 2px 2px #000,
-    2px 2px 2px #000;
-}
-
-.ve-field {
-  margin-top: 16px;
-}
-
-.ve-field label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: #e4d8f3;
-  font-weight: bold;
-}
-
-.ve-field input[type="text"],
-.ve-field input[type="number"],
-.ve-field select,
-.ve-field textarea {
-  width: 100%;
-  box-sizing: border-box;
-  background: #201c2b;
-  border: 1px solid #514362;
-  border-radius: 9px;
-  padding: 12px;
-  color: #fff;
-  font-size: 15px;
-}
-
-.ve-field textarea {
-  resize: vertical;
-  min-height: 85px;
-}
-
-.ve-field input[type="range"] {
-  width: 100%;
-  accent-color: #d18aff;
-}
-
-.ve-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.ve-btn {
-  width: 100%;
-  border: none;
-  border-radius: 10px;
-  padding: 13px 10px;
-  margin-top: 12px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.ve-primary {
-  background: linear-gradient(100deg, #c084fc, #f0abfc);
-  color: #160d20;
-}
-
-.ve-secondary {
-  background: #30263f;
-  color: #fff;
-  border: 1px solid #69547d;
-}
-
-.ve-note {
-  color: #bdb2cc;
-  font-size: 12px;
-  line-height: 1.6;
-  margin-top: 14px;
-}
-
-.ve-status {
-  color: #f0abfc;
-  font-size: 13px;
-  margin-top: 12px;
   overflow-wrap: anywhere;
+  text-shadow: 2px 2px 3px #000,-2px -2px 3px #000;
+  pointer-events: none;
 }
 
-@media (max-width: 400px) {
-  .ve-row {
-    grid-template-columns: 1fr;
-  }
+footer {
+  text-align: center;
+  padding: 25px;
+  color: var(--muted);
+  font-size: 12px;
+}
 
-  .ve-caption-overlay {
-    font-size: 21px;
+@media(max-width:480px) {
+  .grid, .template-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
+</head>
 
-<section class="video-editor" id="videoCaptionEditor">
+<body>
 
-  <h2>🎬 Video Caption Studio</h2>
+<header>
+  <h1>EDITORS CAPTION AI</h1>
+  <p>Captions • Fonts • Templates • Video Studio</p>
+</header>
 
-  <p class="ve-subtitle">
-    Create stylish captions for Reels, Shorts and gaming edits.
-  </p>
+<nav>
+  <button class="active" data-tab="captions">✍️ Captions</button>
+  <button data-tab="templates">📚 Templates</button>
+  <button data-tab="fonts">🔤 Fonts</button>
+  <button data-tab="video">🎬 Video Editor</button>
+  <button data-tab="saved">⭐ Saved</button>
+</nav>
 
-  <label class="ve-field">
-    <span style="display:block;margin-bottom:8px">
-      📁 Upload Your Video
-    </span>
+<main>
 
-    <input
-      class="ve-upload"
-      id="veVideoFile"
-      type="file"
-      accept="video/*"
-    >
-  </label>
+<section class="page" id="captions">
+  <div class="panel">
+    <h2>Caption Generator</h2>
 
-  <div class="ve-preview" id="vePreview">
+    <label for="category">Caption category</label>
+    <select id="category">
+      <option value="attitude">Attitude</option>
+      <option value="love">Love</option>
+      <option value="sad">Sad</option>
+      <option value="friendship">Friendship</option>
+      <option value="mass">Mass</option>
+      <option value="gaming">Gaming</option>
+      <option value="motivation">Motivation</option>
+      <option value="funny">Funny</option>
+      <option value="life">Life</option>
+      <option value="cinematic">Cinematic</option>
+    </select>
 
-    <div class="ve-placeholder" id="vePlaceholder">
-      Your video preview will appear here.
-    </div>
-
-    <video
-      id="veVideo"
-      controls
-      playsinline
-      style="display:none"
-    ></video>
-
-    <div
-      class="ve-caption-overlay"
-      id="veCaptionOverlay"
-      style="display:none"
-    ></div>
-
-  </div>
-
-  <div class="ve-field">
-    <label for="veCaptionText">✍️ Caption Text</label>
-
-    <textarea
-      id="veCaptionText"
-      placeholder="Type your Tamil, Thunglish or English caption..."
-    ></textarea>
-  </div>
-
-  <div class="ve-field">
-    <label for="veCaptionLanguage">🌐 Caption Language</label>
-
-    <select id="veCaptionLanguage">
+    <label for="language">Language</label>
+    <select id="language">
       <option value="Thunglish">Thunglish</option>
       <option value="Tamil">Tamil</option>
       <option value="English">English</option>
-      <option value="Hindi">Hindi</option>
-      <option value="Malayalam">Malayalam</option>
-      <option value="Telugu">Telugu</option>
-      <option value="Kannada">Kannada</option>
     </select>
+
+    <label for="keywords">Your idea (optional)</label>
+    <input id="keywords" placeholder="Example: friendship, confidence, night">
+
+    <button class="btn primary full" id="generateBtn">
+      ✨ Generate Captions
+    </button>
+
+    <div id="captionResults"></div>
   </div>
+</section>
 
-  <div class="ve-field">
-    <label for="veFont">🔤 Font Style</label>
+<section class="page hidden" id="templates">
+  <div class="panel">
+    <h2>Caption Templates</h2>
+    <p class="small">Tap any template to use it in the caption generator.</p>
 
-    <select id="veFont">
-      <option value="Arial, sans-serif">Modern Bold</option>
-      <option value="Impact, sans-serif">Mass / Impact</option>
-      <option value="Georgia, serif">Elegant Serif</option>
-      <option value="'Trebuchet MS', sans-serif">Clean Stylish</option>
-      <option value="'Courier New', monospace">Typewriter</option>
-      <option value="Verdana, sans-serif">Gaming Bold</option>
+    <label for="templateCategory">Filter templates</label>
+    <select id="templateCategory">
+      <option value="all">All categories</option>
+      <option value="attitude">Attitude</option>
+      <option value="love">Love</option>
+      <option value="sad">Sad</option>
+      <option value="friendship">Friendship</option>
+      <option value="mass">Mass</option>
+      <option value="gaming">Gaming</option>
+      <option value="motivation">Motivation</option>
+      <option value="funny">Funny</option>
+      <option value="life">Life</option>
+      <option value="cinematic">Cinematic</option>
     </select>
+
+    <div class="template-grid" id="templateResults"></div>
   </div>
+</section>
 
-  <div class="ve-row">
+<section class="page hidden" id="fonts">
+  <div class="panel">
+    <h2>Font Studio</h2>
 
-    <div class="ve-field">
-      <label for="veTextColor">🎨 Text Colour</label>
-      <input
-        id="veTextColor"
-        type="color"
-        value="#ffffff"
-        style="width:100%;height:45px"
-      >
+    <label for="fontInput">Enter text</label>
+    <input id="fontInput" placeholder="Type your caption">
+
+    <label for="fontStyle">Choose font style</label>
+    <select id="fontStyle">
+      <option value="bold">Bold Unicode</option>
+      <option value="italic">Italic Unicode</option>
+      <option value="script">Script Unicode</option>
+      <option value="double">Double-struck Unicode</option>
+      <option value="normal">Normal text</option>
+    </select>
+
+    <div id="fontPreview" class="result">Your font preview appears here.</div>
+
+    <button class="btn primary full" id="copyFont">Copy Styled Text</button>
+  </div>
+</section>
+
+<section class="page hidden" id="video">
+  <div class="panel">
+    <h2>Video Caption Studio</h2>
+
+    <label for="videoFile">Upload a video</label>
+    <input id="videoFile" type="file" accept="video/*">
+
+    <div class="video-preview">
+      <video id="videoPlayer" controls playsinline class="hidden"></video>
+      <div id="videoPlaceholder" class="small">Your video will appear here.</div>
+      <div id="videoCaption" class="video-overlay hidden"></div>
     </div>
 
-    <div class="ve-field">
-      <label for="veOutlineColor">Text Outline</label>
-      <input
-        id="veOutlineColor"
-        type="color"
-        value="#000000"
-        style="width:100%;height:45px"
-      >
+    <label for="videoText">Caption text</label>
+    <textarea id="videoText" placeholder="Type a caption"></textarea>
+
+    <div class="grid">
+      <div>
+        <label for="videoStart">Start (seconds)</label>
+        <input id="videoStart" type="number" min="0" step="0.1" value="0">
+      </div>
+      <div>
+        <label for="videoEnd">End (seconds)</label>
+        <input id="videoEnd" type="number" min="0" step="0.1" value="5">
+      </div>
     </div>
 
-  </div>
+    <div class="grid">
+      <div>
+        <label for="videoColor">Text colour</label>
+        <input id="videoColor" type="color" value="#ffffff">
+      </div>
+      <div>
+        <label for="videoOutline">Outline colour</label>
+        <input id="videoOutline" type="color" value="#000000">
+      </div>
+    </div>
 
-  <div class="ve-field">
-    <label for="veFontSize">
-      Caption Size: <span id="veFontSizeValue">26</span> px
-    </label>
+    <label for="videoSize">Text size</label>
+    <input id="videoSize" type="range" min="14" max="60" value="27">
 
-    <input
-      id="veFontSize"
-      type="range"
-      min="14"
-      max="60"
-      value="26"
-    >
-  </div>
-
-  <div class="ve-field">
-    <label for="vePosition">📍 Caption Position</label>
-
-    <select id="vePosition">
+    <label for="videoPosition">Caption position</label>
+    <select id="videoPosition">
       <option value="top">Top</option>
       <option value="middle">Centre</option>
       <option value="bottom" selected>Bottom</option>
     </select>
+
+    <button class="btn primary full" id="addVideoCaption">Add / Update Caption</button>
+    <button class="btn secondary full" id="clearVideoCaptions">Clear Captions</button>
+    <button class="btn secondary full" id="autoSpeech">🎤 Start Microphone Captions</button>
+    <button class="btn secondary full" id="stopSpeech">Stop Microphone</button>
+    <button class="btn primary full" id="exportVideo">📥 Export Captioned Video</button>
+
+    <div id="videoStatus" class="result">Upload a video to begin.</div>
+
+    <p class="small">
+      Automatic microphone captions require browser speech-recognition support.
+      They listen to your microphone, not directly to the uploaded video's audio.
+      Video export records playback in real time and depends on browser support.
+    </p>
   </div>
-
-  <div class="ve-field">
-    <label for="veStart">⏱️ Caption Start Time (seconds)</label>
-
-    <input
-      id="veStart"
-      type="number"
-      min="0"
-      step="0.1"
-      value="0"
-    >
-  </div>
-
-  <div class="ve-field">
-    <label for="veEnd">⏱️ Caption End Time (seconds)</label>
-
-    <input
-      id="veEnd"
-      type="number"
-      min="0"
-      step="0.1"
-      value="5"
-    >
-  </div>
-
-  <button
-    type="button"
-    class="ve-btn ve-primary"
-    id="veAddCaption"
-  >
-    ✨ Add / Update Caption
-  </button>
-
-  <button
-    type="button"
-    class="ve-btn ve-secondary"
-    id="veClearCaption"
-  >
-    🗑️ Clear Caption
-  </button>
-
-  <button
-    type="button"
-    class="ve-btn ve-secondary"
-    id="veExportButton"
-  >
-    📥 Export Video
-  </button>
-
-  <p class="ve-status" id="veStatus">
-    Upload a video to get started.
-  </p>
-
-  <p class="ve-note">
-    Your video is previewed in your browser. The next code part
-    adds the editor controls. Video export depends on browser
-    capabilities. Automatic speech recognition will require an
-    additional implementation.
-  </p>
-
 </section>
 
-<!-- END VIDEO CAPTION EDITOR PART 1 --><!-- VIDEO CAPTION EDITOR: PART 2 -->
+<section class="page hidden" id="saved">
+  <div class="panel">
+    <h2>Saved Captions</h2>
+    <div id="savedResults"></div>
+  </div>
+                                                 </section><!-- PART 2: CAPTION DATABASE AND GENERATOR -->
 
 <script>
-(function () {
-  "use strict";
+"use strict";
 
-  const $ = id => document.getElementById(id);
+const $ = id => document.getElementById(id);
 
-  const video = $("veVideo");
-  const fileInput = $("veVideoFile");
-  const placeholder = $("vePlaceholder");
-  const overlay = $("veCaptionOverlay");
-  const captionInput = $("veCaptionText");
-  const status = $("veStatus");
+const database = {
+  attitude: [
+    ["Silent ah irundhaalum, en value koraiyaadhu 🔥", "Silent ah irundhaalum en value koraiyaadhu 🔥", "My silence doesn't reduce my value. 🔥"],
+    ["En vazhi, en rules 😎", "En vazhi, en rules 😎", "My path, my rules. 😎"],
+    ["Naan maarala, improve aaguren 💯", "Naan maarala, improve aaguren 💯", "I'm not changing; I'm improving. 💯"],
+    ["Respect kudutha respect thirumbi varum.", "மரியாதை கொடுத்தால் மரியாதை திரும்ப வரும்.", "Respect given is respect returned."],
+    ["En story ku naan dhaan hero.", "என் கதைக்கு நான்தான் ஹீரோ.", "I'm the hero of my own story."],
+    ["Copy panna mudiyum, replace panna mudiyadhu.", "Copy பண்ண முடியும், replace பண்ண முடியாது.", "You can copy me, but you can't replace me."],
+    ["Less talk, more action.", "பேச்சு குறைவு, செயல் அதிகம்.", "Less talk, more action."],
+    ["En confidence dhaan en style.", "என் நம்பிக்கையே என் ஸ்டைல்.", "Confidence is my style."]
+  ],
 
-  if (!video || !fileInput || !overlay || !captionInput) {
+  love: [
+    ["Un smile dhaan en favourite view ❤️", "உன் சிரிப்புதான் எனக்கு மிகவும் பிடித்த காட்சி ❤️", "Your smile is my favourite view. ❤️"],
+    ["Un kooda irukkura moments priceless.", "உன்னுடன் இருக்கும் தருணங்கள் விலைமதிப்பற்றவை.", "Moments with you are priceless."],
+    ["En favourite notification nee dhaan.", "எனக்குப் பிடித்த அறிவிப்பு நீதான்.", "You're my favourite notification."],
+    ["Oru simple smile, aana special feeling.", "ஒரு சின்ன சிரிப்பு, ஆனால் சிறப்பான உணர்வு.", "A simple smile, a special feeling."],
+    ["Un memories always special.", "உன் நினைவுகள் எப்போதும் சிறப்பு.", "Your memories are always special."],
+    ["Love na words mattum illa, care um dhaan.", "காதல் வார்த்தைகள் மட்டும் இல்லை; அக்கறையும் தான்.", "Love is not just words; it's care."]
+  ],
+
+  sad: [
+    ["Sila feelings words la solla mudiyadhu.", "சில உணர்வுகளை வார்த்தைகளில் சொல்ல முடியாது.", "Some feelings cannot be explained in words."],
+    ["Smile pinnadiyum oru story irukkum.", "சிரிப்புக்குப் பின்னாலும் ஒரு கதை இருக்கும்.", "Every smile can hide a story."],
+    ["Time changes, memories remain.", "காலம் மாறும், நினைவுகள் இருக்கும்.", "Time changes; memories remain."],
+    ["Silent moments neraya sollum.", "அமைதியான தருணங்கள் நிறைய சொல்லும்.", "Silent moments say a lot."],
+    ["Ellam sari aagura naal varum.", "எல்லாம் சரியாகும் நாள் வரும்.", "Better days will come."]
+  ],
+
+  friendship: [
+    ["Friends illa, family dhaan ❤️", "நண்பர்கள் இல்லை, குடும்பம் தான் ❤️", "More than friends, we're family. ❤️"],
+    ["Namma memories always legendary.", "நம் நினைவுகள் எப்போதும் சிறப்பானவை.", "Our memories are legendary."],
+    ["Real friendship ku distance problem illa.", "உண்மையான நட்புக்கு தூரம் தடையில்லை.", "Distance can't defeat real friendship."],
+    ["Serndhu siricha moments priceless.", "ஒன்றாகச் சிரித்த தருணங்கள் விலைமதிப்பற்றவை.", "Moments spent laughing together are priceless."],
+    ["Best friends, unlimited memories.", "சிறந்த நண்பர்கள், முடிவில்லா நினைவுகள்.", "Best friends, unlimited memories."]
+  ],
+
+  mass: [
+    ["Entry simple, impact massive 🔥", "என்ட்ரி சிம்பிள், இம்பாக்ட் மாஸிவ் 🔥", "Simple entry, massive impact. 🔥"],
+    ["Scene maarum, aana character maaraadhu.", "காட்சி மாறும், குணம் மாறாது.", "The scene changes, not the character."],
+    ["Neram varumbodhu answer action la.", "நேரம் வரும்போது பதில் செயலில் இருக்கும்.", "When the time comes, actions will answer."],
+    ["Calm mind, powerful moves.", "அமைதியான மனம், வலிமையான செயல்கள்.", "Calm mind, powerful moves."],
+    ["Oru frame, thousand feelings.", "ஒரு ஃப்ரேம், ஆயிரம் உணர்வுகள்.", "One frame, a thousand feelings."]
+  ],
+
+  gaming: [
+    ["Game on, distractions off 🎮", "கேம் ஆன், கவனச்சிதறல் ஆஃப் 🎮", "Game on, distractions off. 🎮"],
+    ["Aim clean, play smart.", "குறி துல்லியம், ஆட்டம் புத்திசாலித்தனம்.", "Aim clean, play smart."],
+    ["One match, endless memories.", "ஒரு மேட்ச், முடிவில்லா நினைவுகள்.", "One match, endless memories."],
+    ["Squad oda irundha fun vera level.", "ஸ்குவாடுடன் இருந்தால் வேற லெவல்.", "Gaming with the squad hits different."],
+    ["Practice makes progress.", "பயிற்சி முன்னேற்றத்தைத் தரும்.", "Practice makes progress."]
+  ],
+
+  motivation: [
+    ["Daily konjam improve aagu.", "தினமும் கொஞ்சம் முன்னேறு.", "Improve a little every day."],
+    ["Dream perusa vechuko, effort consistent ah kudu.", "கனவு பெரிதாக இருக்கட்டும்; முயற்சி தொடரட்டும்.", "Dream big and stay consistent."],
+    ["Un progress un pace la irukkattum.", "உன் முன்னேற்றம் உன் வேகத்தில் இருக்கட்டும்.", "Grow at your own pace."],
+    ["Failure oru lesson, final destination illa.", "தோல்வி ஒரு பாடம்; முடிவான இடம் அல்ல.", "Failure is a lesson, not the destination."],
+    ["Start small, stay consistent.", "சிறியதாகத் தொடங்கு, தொடர்ந்து செய்.", "Start small, stay consistent."]
+  ],
+
+  funny: [
+    ["Plan perusa, execution Monday la 😂", "பெரிய திட்டம், செயல்பாடு திங்கட்கிழமை 😂", "Big plans, starting Monday. 😂"],
+    ["Battery 1%, confidence 100%.", "பேட்டரி 1%, நம்பிக்கை 100%.", "Battery at 1%, confidence at 100%."],
+    ["Sleep is my hidden talent.", "தூங்குவதுதான் என் திறமை.", "Sleeping is my hidden talent."],
+    ["Diet tomorrow, biryani today.", "டயட் நாளை, பிரியாணி இன்று.", "Diet tomorrow, biryani today."],
+    ["Online la active, real life la loading.", "ஆன்லைனில் ஆக்டிவ், நேரில் லோடிங்.", "Active online, loading in real life."]
+  ],
+
+  life: [
+    ["Life slow ah ponaalum, move aagattum.", "வாழ்க்கை மெதுவாகச் சென்றாலும் முன்னேறட்டும்.", "Slow progress is still progress."],
+    ["Peace is also success.", "மன அமைதியும் வெற்றிதான்.", "Peace is also success."],
+    ["Every day oru new chance.", "ஒவ்வொரு நாளும் ஒரு புதிய வாய்ப்பு.", "Every day is a new chance."],
+    ["Un journey ah unmaiya enjoy pannu.", "உன் பயணத்தை மனதார அனுபவி.", "Enjoy your own journey."],
+    ["Simple life, meaningful memories.", "எளிய வாழ்க்கை, அர்த்தமுள்ள நினைவுகள்.", "Simple life, meaningful memories."]
+  ],
+
+  cinematic: [
+    ["Oru frame la oru full story.", "ஒரு ஃப்ரேமில் ஒரு முழுக் கதை.", "A whole story in one frame."],
+    ["Lighting, music, feeling — perfect combo.", "ஒளி, இசை, உணர்வு — சரியான இணைப்பு.", "Lighting, music, feeling — the perfect combination."],
+    ["Every scene deserves a story.", "ஒவ்வொரு காட்சிக்கும் ஒரு கதை உண்டு.", "Every scene deserves a story."],
+    ["Visuals pesattum, words wait pannattum.", "காட்சிகள் பேசட்டும், வார்த்தைகள் காத்திருக்கட்டும்.", "Let the visuals speak."],
+    ["Cinema mood activated 🎬", "சினிமா மூட் தொடங்கியது 🎬", "Cinema mood activated. 🎬"]
+  ]
+};
+
+let savedCaptions = [];
+
+try {
+  savedCaptions = JSON.parse(
+    localStorage.getItem("ecaSavedCaptions") || "[]"
+  );
+
+  if (!Array.isArray(savedCaptions)) savedCaptions = [];
+} catch (error) {
+  savedCaptions = [];
+}
+
+function getLanguageIndex() {
+  const language = $("language").value;
+
+  if (language === "Tamil") return 1;
+  if (language === "English") return 2;
+
+  return 0;
+}
+
+function generateCaptions() {
+  const category = $("category").value;
+  const languageIndex = getLanguageIndex();
+  const keywords = $("keywords").value.trim();
+  const list = database[category] || database.attitude;
+
+  $("captionResults").replaceChildren();
+
+  list.forEach((item, index) => {
+    let text = item[languageIndex];
+
+    if (keywords) {
+      text += " | " + keywords;
+    }
+
+    const box = document.createElement("div");
+    box.className = "result";
+
+    const paragraph = document.createElement("div");
+    paragraph.textContent = text;
+
+    const copy = document.createElement("button");
+    copy.className = "btn secondary";
+    copy.textContent = "📋 Copy";
+
+    copy.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+        copy.textContent = "Copied!";
+      } catch {
+        window.prompt("Copy your caption:", text);
+      }
+    };
+
+    const save = document.createElement("button");
+    save.className = "btn primary";
+    save.textContent = "⭐ Save";
+
+    save.onclick = () => {
+      saveCaption(text);
+      save.textContent = "Saved!";
+    };
+
+    const use = document.createElement("button");
+    use.className = "btn secondary";
+    use.textContent = "🎬 Use in Video";
+
+    use.onclick = () => {
+      $("videoText").value = text;
+      switchTab("video");
+      $("videoText").focus();
+    };
+
+    box.append(paragraph, copy, save, use);
+    $("captionResults").appendChild(box);
+  });
+}
+
+function renderTemplates() {
+  const filter = $("templateCategory").value;
+  const container = $("templateResults");
+
+  container.replaceChildren();
+
+  Object.entries(database).forEach(([category, list]) => {
+    if (filter !== "all" && filter !== category) return;
+
+    list.forEach(item => {
+      const button = document.createElement("button");
+      button.className = "template";
+
+      const title = document.createElement("strong");
+      title.textContent = category.toUpperCase();
+
+      const preview = document.createElement("span");
+      preview.textContent = item[0];
+
+      button.append(title, preview);
+
+      button.onclick = () => {
+        $("category").value = category;
+        $("language").value = "Thunglish";
+        $("keywords").value = "";
+        $("captionResults").replaceChildren();
+
+        const result = document.createElement("div");
+        result.className = "result";
+        result.textContent = item[0];
+
+        const use = document.createElement("button");
+        use.className = "btn primary full";
+        use.textContent = "Use This Caption";
+
+        use.onclick = () => {
+          $("videoText").value = item[0];
+          switchTab("video");
+        };
+
+        const copy = document.createElement("button");
+        copy.className = "btn secondary full";
+        copy.textContent = "Copy Template";
+
+        copy.onclick = async () => {
+          try {
+            await navigator.clipboard.writeText(item[0]);
+            copy.textContent = "Copied!";
+          } catch {
+            window.prompt("Copy this caption:", item[0]);
+          }
+        };
+
+        result.append(use, copy);
+        $("captionResults").appendChild(result);
+
+        switchTab("captions");
+      };
+
+      container.appendChild(button);
+    });
+  });
+}
+
+function saveCaption(text) {
+  if (!savedCaptions.includes(text)) {
+    savedCaptions.push(text);
+  }
+
+  try {
+    localStorage.setItem(
+      "ecaSavedCaptions",
+      JSON.stringify(savedCaptions)
+    );
+  } catch (error) {
+    console.warn("Could not save captions.", error);
+  }
+
+  renderSaved();
+}
+
+function renderSaved() {
+  const container = $("savedResults");
+  container.replaceChildren();
+
+  if (!savedCaptions.length) {
+    container.textContent = "No saved captions yet.";
     return;
   }
 
-  let videoURL = null;
-  let captions = [];
-  let captionCounter = 0;
+  savedCaptions.forEach(text => {
+    const box = document.createElement("div");
+    box.className = "result";
 
-  function setStatus(message) {
-    status.textContent = message;
-  }
+    const content = document.createElement("div");
+    content.textContent = text;
 
-  function getSettings() {
-    return {
-      text: captionInput.value.trim(),
-      start: Number($("veStart").value),
-      end: Number($("veEnd").value),
-      color: $("veTextColor").value,
-      outline: $("veOutlineColor").value,
-      size: Number($("veFontSize").value),
-      font: $("veFont").value,
-      position: $("vePosition").value
-    };
-  }
+    const copy = document.createElement("button");
+    copy.className = "btn secondary";
+    copy.textContent = "Copy";
 
-  function applyStyle(settings) {
-    overlay.style.color = settings.color;
-    overlay.style.fontSize = settings.size + "px";
-    overlay.style.fontFamily = settings.font;
-
-    const shadow = settings.outline;
-    overlay.style.textShadow = [
-      "-2px -2px 0 " + shadow,
-      "2px -2px 0 " + shadow,
-      "-2px 2px 0 " + shadow,
-      "2px 2px 0 " + shadow,
-      "0 3px 5px #000"
-    ].join(",");
-
-    overlay.style.top = "";
-    overlay.style.bottom = "";
-    overlay.style.transform = "";
-
-    if (settings.position === "top") {
-      overlay.style.top = "8%";
-      overlay.style.bottom = "auto";
-    } else if (settings.position === "middle") {
-      overlay.style.top = "50%";
-      overlay.style.bottom = "auto";
-      overlay.style.transform = "translateY(-50%)";
-    } else {
-      overlay.style.bottom = "10%";
-      overlay.style.top = "auto";
-    }
-  }
-
-  function renderCaption() {
-    const current = video.currentTime || 0;
-
-    const active = captions.find(c =>
-      current >= c.start && current <= c.end
-    );
-
-    if (!active) {
-      overlay.style.display = "none";
-      return;
-    }
-
-    overlay.textContent = active.text;
-    applyStyle(active);
-    overlay.style.display = "block";
-  }
-
-  fileInput.addEventListener("change", function () {
-    const file = fileInput.files && fileInput.files[0];
-
-    if (!file) return;
-
-    if (!file.type.startsWith("video/")) {
-      setStatus("Please select a valid video file.");
-      return;
-    }
-
-    if (videoURL) {
-      URL.revokeObjectURL(videoURL);
-    }
-
-    videoURL = URL.createObjectURL(file);
-    video.src = videoURL;
-    video.style.display = "block";
-    placeholder.style.display = "none";
-
-    captions = [];
-    overlay.style.display = "none";
-
-    video.onloadedmetadata = function () {
-      $("veStart").value = "0";
-      $("veEnd").value = Math.min(5, video.duration).toFixed(1);
-
-      setStatus(
-        "Video loaded! Duration: " +
-        video.duration.toFixed(2) +
-        " seconds. Add your caption."
-      );
+    copy.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+        copy.textContent = "Copied!";
+      } catch {
+        window.prompt("Copy caption:", text);
+      }
     };
 
-    video.onerror = function () {
-      setStatus(
-        "The video could not be loaded. Try another supported video format."
-      );
+    const remove = document.createElement("button");
+    remove.className = "btn secondary";
+    remove.textContent = "Remove";
+
+    remove.onclick = () => {
+      savedCaptions = savedCaptions.filter(x => x !== text);
+
+      try {
+        localStorage.setItem(
+          "ecaSavedCaptions",
+          JSON.stringify(savedCaptions)
+        );
+      } catch (error) {}
+
+      renderSaved();
     };
 
-    video.load();
+    box.append(content, copy, remove);
+    container.appendChild(box);
+  });
+}
+
+$("generateBtn").addEventListener("click", generateCaptions);
+$("templateCategory").addEventListener("change", renderTemplates);
+
+renderTemplates();
+renderSaved();
+generateCaptions();
+
+/* END PART 2 */
+</script><!-- PART 3: NAVIGATION, FONTS, VIDEO CAPTIONS AND EXPORT -->
+
+<script>
+/* =========================================
+   1. WEBSITE NAVIGATION
+========================================= */
+
+function switchTab(tabName) {
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.toggle("hidden", page.id !== tabName);
   });
 
-  $("veFontSize").addEventListener("input", function () {
-    $("veFontSizeValue").textContent = this.value;
-
-    const settings = getSettings();
-    const active = captions.find(c =>
-      video.currentTime >= c.start &&
-      video.currentTime <= c.end
+  document.querySelectorAll("nav button").forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.tab === tabName
     );
-
-    if (active) {
-      Object.assign(active, settings);
-      renderCaption();
-    }
   });
 
-  [
-    "veTextColor",
-    "veOutlineColor",
-    "veFont",
-    "vePosition"
-  ].forEach(id => {
-    $(id).addEventListener("input", function () {
-      const settings = getSettings();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
-      const active = captions.find(c =>
-        video.currentTime >= c.start &&
-        video.currentTime <= c.end
+document.querySelectorAll("nav button").forEach(button => {
+  button.addEventListener("click", () => {
+    switchTab(button.dataset.tab);
+  });
+});
+
+
+/* =========================================
+   2. FONT STYLE GENERATOR
+========================================= */
+
+const fontMaps = {
+  bold: [
+    0x1D400, 0x1D41A, 0x1D7CE
+  ],
+  italic: [
+    0x1D434, 0x1D44E, null
+  ],
+  script: [
+    0x1D49C, 0x1D4B6, null
+  ],
+  double: [
+    0x1D538, 0x1D552, 0x1D7D8
+  ]
+};
+
+function styleUnicode(text, style) {
+  if (style === "normal") return text;
+
+  const bases = fontMaps[style];
+  if (!bases) return text;
+
+  return Array.from(text).map(char => {
+    const code = char.codePointAt(0);
+
+    if (code >= 65 && code <= 90) {
+      const offset = code - 65;
+
+      // Unicode has some missing script characters.
+      const special = {
+        "script:66": 0x212C,
+        "script:69": 0x2130,
+        "script:70": 0x2131,
+        "script:72": 0x210B,
+        "script:73": 0x2110,
+        "script:76": 0x2112,
+        "script:77": 0x2133,
+        "script:82": 0x211B
+      };
+
+      const key = style + ":" + code;
+
+      if (special[key]) {
+        return String.fromCodePoint(special[key]);
+      }
+
+      if (bases[0]) {
+        return String.fromCodePoint(bases[0] + offset);
+      }
+    }
+
+    if (code >= 97 && code <= 122 && bases[1]) {
+      const offset = code - 97;
+
+      const special = {
+        "italic:104": 0x210E,
+        "script:103": 0x210A,
+        "script:111": 0x2134
+      };
+
+      const key = style + ":" + code;
+
+      if (special[key]) {
+        return String.fromCodePoint(special[key]);
+      }
+
+      return String.fromCodePoint(bases[1] + offset);
+    }
+
+    if (code >= 48 && code <= 57 && bases[2]) {
+      return String.fromCodePoint(bases[2] + code - 48);
+    }
+
+    return char;
+  }).join("");
+}
+
+function updateFontPreview() {
+  const text = $("fontInput").value || "Your font preview appears here.";
+
+  $("fontPreview").textContent = styleUnicode(
+    text,
+    $("fontStyle").value
+  );
+}
+
+$("fontInput").addEventListener("input", updateFontPreview);
+$("fontStyle").addEventListener("change", updateFontPreview);
+
+$("copyFont").addEventListener("click", async () => {
+  const text = $("fontPreview").textContent;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    $("copyFont").textContent = "Copied!";
+  } catch {
+    window.prompt("Copy your styled text:", text);
+  }
+});
+
+
+/* =========================================
+   3. VIDEO CAPTION EDITOR
+========================================= */
+
+const video = $("videoPlayer");
+const videoOverlay = $("videoCaption");
+const videoStatus = $("videoStatus");
+
+let currentVideoURL = null;
+let videoCaptions = [];
+let speechRecognition = null;
+let lastSpeechText = "";
+let lastSpeechStart = 0;
+
+function videoMessage(message) {
+  videoStatus.textContent = message;
+}
+
+function getVideoSettings() {
+  return {
+    text: $("videoText").value.trim(),
+    start: Number($("videoStart").value),
+    end: Number($("videoEnd").value),
+    color: $("videoColor").value,
+    outline: $("videoOutline").value,
+    size: Number($("videoSize").value),
+    position: $("videoPosition").value
+  };
+}
+
+function applyVideoStyle(caption) {
+  videoOverlay.style.color = caption.color;
+  videoOverlay.style.fontSize = caption.size + "px";
+
+  videoOverlay.style.textShadow = [
+    "-2px -2px 0 " + caption.outline,
+    "2px -2px 0 " + caption.outline,
+    "-2px 2px 0 " + caption.outline,
+    "2px 2px 0 " + caption.outline
+  ].join(",");
+
+  videoOverlay.style.top = "";
+  videoOverlay.style.bottom = "";
+  videoOverlay.style.transform = "";
+
+  if (caption.position === "top") {
+    videoOverlay.style.top = "8%";
+    videoOverlay.style.bottom = "auto";
+  } else if (caption.position === "middle") {
+    videoOverlay.style.top = "50%";
+    videoOverlay.style.bottom = "auto";
+    videoOverlay.style.transform = "translateY(-50%)";
+  } else {
+    videoOverlay.style.bottom = "10%";
+    videoOverlay.style.top = "auto";
+  }
+}
+
+function updateVideoCaption() {
+  const now = video.currentTime || 0;
+
+  const active = videoCaptions.find(caption =>
+    now >= caption.start && now < caption.end
+  );
+
+  if (!active) {
+    videoOverlay.classList.add("hidden");
+    return;
+  }
+
+  videoOverlay.textContent = active.text;
+  applyVideoStyle(active);
+  videoOverlay.classList.remove("hidden");
+}
+
+$("videoFile").addEventListener("change", event => {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  if (!file.type.startsWith("video/")) {
+    videoMessage("Please select a valid video file.");
+    return;
+  }
+
+  if (currentVideoURL) {
+    URL.revokeObjectURL(currentVideoURL);
+  }
+
+  currentVideoURL = URL.createObjectURL(file);
+
+  video.src = currentVideoURL;
+  video.classList.remove("hidden");
+  $("videoPlaceholder").classList.add("hidden");
+
+  videoCaptions = [];
+  videoOverlay.classList.add("hidden");
+
+  video.onloadedmetadata = () => {
+    $("videoStart").value = "0";
+
+    $("videoEnd").value = Math.min(
+      5,
+      video.duration
+    ).toFixed(1);
+
+    videoMessage(
+      "Video loaded! Duration: " +
+      video.duration.toFixed(1) +
+      " seconds."
+    );
+  };
+
+  video.onerror = () => {
+    videoMessage("Unable to load this video. Try another video.");
+  };
+
+  video.load();
+});
+
+video.addEventListener("timeupdate", updateVideoCaption);
+video.addEventListener("seeked", updateVideoCaption);
+video.addEventListener("loadeddata", updateVideoCaption);
+
+[
+  "videoColor",
+  "videoOutline",
+  "videoSize",
+  "videoPosition"
+].forEach(id => {
+  $(id).addEventListener("input", updateVideoCaption);
+});
+
+$("addVideoCaption").addEventListener("click", () => {
+  if (!video.src || !Number.isFinite(video.duration)) {
+    videoMessage("Upload a video first.");
+    return;
+  }
+
+  const caption = getVideoSettings();
+
+  if (!caption.text) {
+    videoMessage("Type a caption first.");
+    return;
+  }
+
+  if (
+    !Number.isFinite(caption.start) ||
+    !Number.isFinite(caption.end) ||
+    caption.start < 0 ||
+    caption.end <= caption.start ||
+    caption.end > video.duration
+  ) {
+    videoMessage(
+      "Check the caption times. They must be within your video's duration."
+    );
+    return;
+  }
+
+  videoCaptions.push(caption);
+
+  videoCaptions.sort((a, b) => a.start - b.start);
+
+  video.currentTime = caption.start;
+  updateVideoCaption();
+
+  videoMessage(
+    "Caption added! Total captions: " + videoCaptions.length
+  );
+});
+
+$("clearVideoCaptions").addEventListener("click", () => {
+  videoCaptions = [];
+  videoOverlay.classList.add("hidden");
+  videoMessage("All video captions cleared.");
+});
+
+
+/* =========================================
+   4. MICROPHONE SPEECH RECOGNITION
+========================================= */
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+$("autoSpeech").addEventListener("click", () => {
+  if (!SpeechRecognition) {
+    videoMessage(
+      "Speech recognition is not supported in this browser. Try a supported browser."
+    );
+    return;
+  }
+
+  if (speechRecognition) {
+    videoMessage("Speech recognition is already running.");
+    return;
+  }
+
+  speechRecognition = new SpeechRecognition();
+
+  speechRecognition.continuous = true;
+  speechRecognition.interimResults = true;
+
+  const language = $("language").value;
+
+  const languageCodes = {
+    Thunglish: "en-IN",
+    Tamil: "ta-IN",
+    English: "en-IN"
+  };
+
+  speechRecognition.lang = languageCodes[language] || "en-IN";
+
+  speechRecognition.onresult = event => {
+    for (
+      let i = event.resultIndex;
+      i < event.results.length;
+      i++
+    ) {
+      const result = event.results[i];
+      const transcript = result[0].transcript.trim();
+
+      if (!transcript) continue;
+
+      if (!result.isFinal) {
+        $("videoText").value = transcript;
+        continue;
+      }
+
+      if (!video.src || !Number.isFinite(video.duration)) {
+        videoMessage(
+          "Speech detected. Upload a video first to create timed captions."
+        );
+        continue;
+      }
+
+      const start = Math.max(0, video.currentTime);
+      const end = Math.min(video.duration, start + 3);
+
+      if (end <= start) {
+        videoMessage("The video has ended. Seek to an earlier time.");
+        continue;
+      }
+
+      if (transcript === lastSpeechText && start - lastSpeechStart < 1) {
+        continue;
+      }
+
+      lastSpeechText = transcript;
+      lastSpeechStart = start;
+
+      videoCaptions.push({
+        text: transcript,
+        start,
+        end,
+        color: $("videoColor").value,
+        outline: $("videoOutline").value,
+        size: Number($("videoSize").value),
+        position: $("videoPosition").value
+      });
+
+      $("videoText").value = transcript;
+      $("videoStart").value = start.toFixed(1);
+      $("videoEnd").value = end.toFixed(1);
+
+      updateVideoCaption();
+
+      videoMessage(
+        "Speech captured and caption added: " + transcript
+      );
+    }
+  };
+
+  speechRecognition.onerror = event => {
+    videoMessage(
+      "Speech recognition error: " + event.error +
+      ". Check microphone permission and browser support."
+    );
+  };
+
+  speechRecognition.onend = () => {
+    speechRecognition = null;
+  };
+
+  try {
+    speechRecognition.start();
+
+    videoMessage(
+      "Listening to your microphone. Speak clearly. Captions are added when speech is recognized."
+    );
+  } catch (error) {
+    speechRecognition = null;
+
+    videoMessage(
+      "Could not start recognition. Check microphone permission and try again."
+    );
+  }
+});
+
+$("stopSpeech").addEventListener("click", () => {
+  if (speechRecognition) {
+    speechRecognition.stop();
+    speechRecognition = null;
+  }
+
+  videoMessage("Microphone captions stopped.");
+});
+
+
+/* =========================================
+   5. EXPORT VIDEO WITH EMBEDDED CAPTIONS
+========================================= */
+
+$("exportVideo").addEventListener("click", async () => {
+  if (!video.src || !Number.isFinite(video.duration)) {
+    videoMessage("Upload a video first.");
+    return;
+  }
+
+  if (!videoCaptions.length) {
+    videoMessage("Add at least one caption before exporting.");
+    return;
+  }
+
+  if (
+    !window.MediaRecorder ||
+    !HTMLCanvasElement.prototype.captureStream
+  ) {
+    videoMessage(
+      "Video export is unsupported by this browser."
+    );
+    return;
+  }
+
+  const exportButton = $("exportVideo");
+
+  exportButton.disabled = true;
+
+  let recorder;
+  let canvasStream;
+  let combinedStream;
+  let audioStream;
+  let audioContext;
+  let audioSource;
+  let animationFrame;
+
+  try {
+    const canvas = document.createElement("canvas");
+
+    canvas.width = video.videoWidth || 720;
+    canvas.height = video.videoHeight || 1280;
+
+    const ctx = canvas.getContext("2d");
+
+    canvasStream = canvas.captureStream(30);
+
+    const tracks = canvasStream.getVideoTracks().slice();
+
+    /*
+      Audio capture support differs across mobile browsers.
+      Attempt to capture audio from the video element when available.
+    */
+
+    try {
+      const captureVideo =
+        video.captureStream || video.mozCaptureStream;
+
+      if (captureVideo) {
+        audioStream = captureVideo.call(video);
+
+        audioStream.getAudioTracks().forEach(track => {
+          tracks.push(track);
+        });
+      }
+    } catch (audioError) {
+      console.warn("Video audio capture unavailable.", audioError);
+    }
+
+    combinedStream = new MediaStream(tracks);
+
+    const types = [
+      "video/webm;codecs=vp9,opus",
+      "video/webm;codecs=vp8,opus",
+      "video/webm"
+    ];
+
+    const supportedType = types.find(type =>
+      MediaRecorder.isTypeSupported(type)
+    );
+
+    recorder = new MediaRecorder(
+      combinedStream,
+      supportedType ? { mimeType: supportedType } : undefined
+    );
+
+    const chunks = [];
+
+    recorder.ondataavailable = event => {
+      if (event.data && event.data.size) {
+        chunks.push(event.data);
+      }
+    };
+
+    const finished = new Promise((resolve, reject) => {
+      recorder.onstop = resolve;
+
+      recorder.onerror = event => {
+        reject(event.error || new Error("Recording failed."));
+      };
+    });
+
+    function drawFrame() {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const now = video.currentTime;
+
+      const active = videoCaptions.find(caption =>
+        now >= caption.start && now < caption.end
       );
 
       if (active) {
-        Object.assign(active, settings);
-        renderCaption();
-      }
-    });
-  });
+        const scale = canvas.width / 720;
+        const size = active.size * scale;
+        const maxWidth = canvas.width * 0.92;
 
-  $("veAddCaption").addEventListener("click", function () {
-    if (!video.src || video.readyState < 1) {
-      setStatus("Upload a video first.");
-      return;
-    }
+        ctx.save();
 
-    const settings = getSettings();
+        ctx.font = "900 " + size + "px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
 
-    if (!settings.text) {
-      setStatus("Please type a caption first.");
-      return;
-    }
+        const words = active.text.split(/\s+/);
+        const lines = [];
+        let line = "";
 
-    if (
-      !Number.isFinite(settings.start) ||
-      !Number.isFinite(settings.end) ||
-      settings.start < 0 ||
-      settings.end <= settings.start ||
-      settings.end > video.duration
-    ) {
-      setStatus(
-        "Check your start and end times. They must be within the video duration."
-      );
-      return;
-    }
+        words.forEach(word => {
+          const test = line ? line + " " + word : word;
 
-    const caption = {
-      ...settings,
-      id: ++captionCounter
-    };
+          if (
+            ctx.measureText(test).width > maxWidth &&
+            line
+          ) {
+            lines.push(line);
+            line = word;
+          } else {
+            line = test;
+          }
+        });
 
-    captions.push(caption);
-    captions.sort((a, b) => a.start - b.start);
+        if (line) lines.push(line);
 
-    video.currentTime = caption.start;
-    renderCaption();
+        const lineHeight = size * 1.2;
+        const totalHeight = lines.length * lineHeight;
 
-    setStatus(
-      "Caption added! " + captions.length +
-      " caption(s) in your timeline."
-    );
-  });
+        let centerY;
 
-  $("veClearCaption").addEventListener("click", function () {
-    captions = [];
-    overlay.style.display = "none";
-    setStatus("All captions cleared.");
-  });
-
-  video.addEventListener("timeupdate", renderCaption);
-  video.addEventListener("seeked", renderCaption);
-  video.addEventListener("loadeddata", renderCaption);
-
-  /*
-   * Export a WebM video with captions burned into its frames,
-   * when the browser supports canvas capture and MediaRecorder.
-   * This is a real-time recording, not a fast offline render.
-   */
-  $("veExportButton").addEventListener("click", async function () {
-    if (!video.src || video.readyState < 2) {
-      setStatus("Upload a video first.");
-      return;
-    }
-
-    if (!captions.length) {
-      setStatus("Add at least one caption before exporting.");
-      return;
-    }
-
-    if (!window.MediaRecorder ||
-        !HTMLCanvasElement.prototype.captureStream) {
-      setStatus(
-        "Video export isn't supported by this browser. Try a compatible desktop browser."
-      );
-      return;
-    }
-
-    const button = $("veExportButton");
-    button.disabled = true;
-
-    let canvasStream;
-    let combinedStream;
-    let recorder;
-    let animationFrame;
-    let videoTrack;
-    let audioContext;
-    let audioSource;
-    let audioDestination;
-
-    try {
-      const canvas = document.createElement("canvas");
-
-      canvas.width = video.videoWidth || 720;
-      canvas.height = video.videoHeight || 1280;
-
-      const ctx = canvas.getContext("2d");
-
-      canvasStream = canvas.captureStream(30);
-
-      const tracks = [...canvasStream.getVideoTracks()];
-
-      /*
-       * Audio capture may be blocked by browser permissions or
-       * unsupported on the selected device.
-       */
-      try {
-        const AudioContextClass =
-          window.AudioContext || window.webkitAudioContext;
-
-        if (AudioContextClass) {
-          audioContext = new AudioContextClass();
-          audioDestination = audioContext.createMediaStreamDestination();
-          audioSource = audioContext.createMediaElementSource(video);
-
-          audioSource.connect(audioDestination);
-          audioSource.connect(audioContext.destination);
-
-          audioDestination.stream.getAudioTracks().forEach(track => {
-            tracks.push(track);
-          });
-
-          await audioContext.resume();
+        if (active.position === "top") {
+          centerY = canvas.height * 0.12 + totalHeight / 2;
+        } else if (active.position === "middle") {
+          centerY = canvas.height / 2;
+        } else {
+          centerY = canvas.height * 0.88 - totalHeight / 2;
         }
-      } catch (audioError) {
-        console.warn("Audio capture unavailable:", audioError);
-      }
 
-      combinedStream = new MediaStream(tracks);
+        ctx.lineWidth = Math.max(2, size * 0.1);
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = active.outline;
+        ctx.fillStyle = active.color;
 
-      const mimeTypes = [
-        "video/webm;codecs=vp9,opus",
-        "video/webm;codecs=vp8,opus",
-        "video/webm"
-      ];
+        lines.forEach((text, index) => {
+          const y =
+            centerY -
+            totalHeight / 2 +
+            index * lineHeight +
+            lineHeight / 2;
 
-      const mimeType = mimeTypes.find(type =>
-        MediaRecorder.isTypeSupported(type)
-      );
-
-      recorder = new MediaRecorder(
-        combinedStream,
-        mimeType ? { mimeType } : undefined
-      );
-
-      const chunks = [];
-
-      recorder.ondataavailable = function (event) {
-        if (event.data && event.data.size) {
-          chunks.push(event.data);
-        }
-      };
-
-      const recordingFinished = new Promise((resolve, reject) => {
-        recorder.onstop = resolve;
-        recorder.onerror = event => reject(event.error);
-      });
-
-      function drawFrame() {
-        if (video.readyState >= 2) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-          const current = video.currentTime;
-          const active = captions.find(c =>
-            current >= c.start && current <= c.end
+          ctx.strokeText(
+            text,
+            canvas.width / 2,
+            y,
+            maxWidth
           );
 
-          if (active) {
-            const scale = canvas.width / 720;
-            const fontSize = active.size * scale;
+          ctx.fillText(
+            text,
+            canvas.width / 2,
+            y,
+            maxWidth
+          );
+        });
 
-            ctx.save();
-            ctx.font = "900 " + fontSize + "px " + active.font;
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-
-            const maxWidth = canvas.width * 0.92;
-            const words = active.text.split(/\s+/);
-            const lines = [];
-            let line = "";
-
-            words.forEach(word => {
-              const test = line ? line + " " + word : word;
-
-              if (ctx.measureText(test).width > maxWidth && line) {
-                lines.push(line);
-                line = word;
-              } else {
-                line = test;
-              }
-            });
-
-            if (line) lines.push(line);
-
-            const lineHeight = fontSize * 1.2;
-            const totalHeight = lines.length * lineHeight;
-
-            let y;
-
-            if (active.position === "top") {
-              y = canvas.height * 0.1 + totalHeight / 2;
-            } else if (active.position === "middle") {
-              y = canvas.height / 2;
-            } else {
-              y = canvas.height * 0.88 - totalHeight / 2;
-            }
-
-            ctx.lineWidth = Math.max(2, fontSize * 0.1);
-            ctx.lineJoin = "round";
-            ctx.strokeStyle = active.outline;
-            ctx.fillStyle = active.color;
-
-            lines.forEach((text, index) => {
-              const lineY =
-                y - totalHeight / 2 +
-                index * lineHeight +
-                lineHeight / 2;
-
-              ctx.strokeText(text, canvas.width / 2, lineY, maxWidth);
-              ctx.fillText(text, canvas.width / 2, lineY, maxWidth);
-            });
-
-            ctx.restore();
-          }
-        }
-
-        if (!video.ended && !video.paused) {
-          animationFrame = requestAnimationFrame(drawFrame);
-        }
+        ctx.restore();
       }
 
-      video.pause();
-      video.currentTime = 0;
-
-      await new Promise(resolve => {
-        if (video.readyState >= 2) resolve();
-        else video.addEventListener("loadeddata", resolve, { once: true });
-      });
-
-      await video.play();
-
-      drawFrame();
-      recorder.start(250);
-
-      setStatus(
-        "Recording export in real time. Keep this page open until it finishes."
-      );
-
-      await new Promise(resolve => {
-        video.addEventListener("ended", resolve, { once: true });
-      });
-
-      cancelAnimationFrame(animationFrame);
-
-      if (recorder.state !== "inactive") {
-        recorder.stop();
+      if (!video.paused && !video.ended) {
+        animationFrame = requestAnimationFrame(drawFrame);
       }
-
-      await recordingFinished;
-
-      const blob = new Blob(chunks, {
-        type: recorder.mimeType || "video/webm"
-      });
-
-      if (!blob.size) {
-        throw new Error("The exported video is empty.");
-      }
-
-      const downloadURL = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-
-      link.href = downloadURL;
-      link.download = "editors-caption-video.webm";
-
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-      setTimeout(() => URL.revokeObjectURL(downloadURL), 60000);
-
-      setStatus(
-        "Export complete! Downloaded a WebM video with embedded captions. Check your Downloads folder."
-      );
-
-    } catch (error) {
-      console.error(error);
-
-      setStatus(
-        "Export failed. Your browser may not support this recording method, or video playback may have been interrupted. Try another browser."
-      );
-
-    } finally {
-      if (animationFrame) cancelAnimationFrame(animationFrame);
-
-      if (recorder && recorder.state !== "inactive") {
-        recorder.stop();
-      }
-
-      if (audioContext) {
-        try {
-          await audioContext.close();
-        } catch (e) {}
-      }
-
-      if (canvasStream) {
-        canvasStream.getTracks().forEach(track => track.stop());
-      }
-
-      if (combinedStream) {
-        combinedStream.getTracks().forEach(track => track.stop());
-      }
-
-      button.disabled = false;
     }
-  });
 
-  setStatus("Video Caption Studio is ready. Upload a video to begin.");
+    video.pause();
+    video.currentTime = 0;
 
-})();
+    await new Promise(resolve => {
+      if (video.readyState >= 2) {
+        resolve();
+      } else {
+        video.addEventListener("loadeddata", resolve, {
+          once: true
+        });
+      }
+    });
+
+    recorder.start(250);
+
+    await video.play();
+
+    drawFrame();
+
+    videoMessage(
+      "Exporting in real time. Keep this page open until the video finishes."
+    );
+
+    await new Promise((resolve, reject) => {
+      video.addEventListener("ended", resolve, { once: true });
+
+      video.addEventListener("error", () => {
+        reject(new Error("Video playback failed."));
+      }, { once: true });
+    });
+
+    cancelAnimationFrame(animationFrame);
+
+    if (recorder.state !== "inactive") {
+      recorder.stop();
+    }
+
+    await finished;
+
+    const blob = new Blob(chunks, {
+      type: recorder.mimeType || "video/webm"
+    });
+
+    if (!blob.size) {
+      throw new Error("The exported video is empty.");
+    }
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "editors-caption-ai.webm";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+
+    videoMessage(
+      "Export finished! Check your Downloads folder for editors-caption-ai.webm."
+    );
+
+  } catch (error) {
+    console.error(error);
+
+    videoMessage(
+      "Export failed. Your browser may not support video recording, or playback may have been interrupted. Try a shorter video."
+    );
+
+  } finally {
+    if (animationFrame) {
+      cancelAnimationFrame(animationFrame);
+    }
+
+    if (recorder && recorder.state !== "inactive") {
+      recorder.stop();
+    }
+
+    if (canvasStream) {
+      canvasStream.getTracks().forEach(track => track.stop());
+    }
+
+    if (audioStream) {
+      audioStream.getTracks().forEach(track => track.stop());
+    }
+
+    if (combinedStream) {
+      combinedStream.getTracks().forEach(track => track.stop());
+    }
+
+    if (audioContext) {
+      try {
+        await audioContext.close();
+      } catch (error) {}
+    }
+
+    exportButton.disabled = false;
+  }
+});
+
+
+/* =========================================
+   6. INITIALISE WEBSITE
+========================================= */
+
+switchTab("captions");
+updateFontPreview();
+renderTemplates();
+renderSaved();
+
+console.log("Editors Caption AI loaded successfully.");
+
 </script>
 
-<!-- END VIDEO CAPTION EDITOR PART 2 -->
+<footer>
+  <p>Editors Caption AI</p>
+  <p>Made for creative video editors.</p>
+</footer>
+
+</main>
+</body>
+</html>
